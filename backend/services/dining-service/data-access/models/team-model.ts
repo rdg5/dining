@@ -18,7 +18,7 @@ export interface TeamModelFields
 
 export function getOrderModel() {
   const teamModel = getDbConnection().define<TeamModelFields>(
-    'User',
+    'Role',
     {
       id: {
         type: DataTypes.INTEGER,

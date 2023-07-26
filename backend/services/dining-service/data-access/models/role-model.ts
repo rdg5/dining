@@ -18,7 +18,7 @@ export interface RoleModelFields
 
 export function getOrderModel() {
   const roleModel = getDbConnection().define<RoleModelFields>(
-    'User',
+    'Role',
     {
       id: {
         type: DataTypes.INTEGER,

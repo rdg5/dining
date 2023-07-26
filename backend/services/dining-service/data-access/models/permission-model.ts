@@ -18,7 +18,7 @@ export interface PermissionModelFields
 
 export function getOrderModel() {
   const permissionModel = getDbConnection().define<PermissionModelFields>(
-    'User',
+    'Permission',
     {
       id: {
         type: DataTypes.INTEGER,
