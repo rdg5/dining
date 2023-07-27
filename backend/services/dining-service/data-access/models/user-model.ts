@@ -6,6 +6,9 @@ import {
   Model,
 } from 'sequelize';
 import getDbConnection from './db-connection';
+import { getTeamModel } from './team-model';
+import { getRoleModel } from './role-model';
+import { getPermissionModel } from './permission-model';
 
 export interface UserModelFields
   extends Model<
@@ -22,9 +25,12 @@ export interface UserModelFields
   forgottenPasswordToken: string;
   forgottenPasswordTokenExpiresAt: number;
   createdAt: number;
+  roleId: number;
+  permissionId: number;
+  teamId: number;
 }
 
-export function getOrderModel() {
+export function getUserModel() {
   const userModel = getDbConnection().define<UserModelFields>(
     'User',
     {
@@ -60,8 +66,32 @@ export function getOrderModel() {
       createdAt: {
         type: DataTypes.DATE,
       },
+      permissionId: {
+        type: DataTypes.INTEGER,
+      },
+      roleId: {
+        type: DataTypes.INTEGER,
+      },
+      teamId: {
+        type: DataTypes.INTEGER,
+      },
     },
     { freezeTableName: true }
   );
+  userModel.belongsToMany(getRoleModel(), {
+    through: 'userRole',
+    foreignKey: 'userId',
+    otherKey: 'roleId',
+  });
+  userModel.belongsToMany(getTeamModel(), {
+    through: 'UserTeam',
+    foreignKey: 'userId',
+    otherKey: 'teamId',
+  });
+  userModel.belongsToMany(getPermissionModel(), {
+    through: 'UserPermission',
+    foreignKey: 'userId',
+    otherKey: 'permissionId',
+  });
   return userModel;
 }

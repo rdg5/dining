@@ -6,6 +6,7 @@ import {
   Model,
 } from 'sequelize';
 import getDbConnection from './db-connection';
+import { getUserModel } from './user-model';
 
 export interface RoleModelFields
   extends Model<
@@ -14,9 +15,12 @@ export interface RoleModelFields
   > {
   id: CreationOptional<number>;
   role: string;
+  userId: number;
+  permissionId: number;
+  teamId: number;
 }
 
-export function getOrderModel() {
+export function getRoleModel() {
   const roleModel = getDbConnection().define<RoleModelFields>(
     'Role',
     {
@@ -28,8 +32,22 @@ export function getOrderModel() {
       role: {
         type: DataTypes.STRING,
       },
+      userId: {
+        type: DataTypes.INTEGER,
+      },
+      permissionId: {
+        type: DataTypes.INTEGER,
+      },
+      teamId: {
+        type: DataTypes.INTEGER,
+      },
     },
     { freezeTableName: true }
   );
+  roleModel.belongsToMany(getUserModel(), {
+    through: 'UserTeam', // The junction table name for User and Team
+    foreignKey: 'roleId', // The foreign key in the junction table referencing Team
+    otherKey: 'userId', // The foreign key in the junction table referencing User
+  });
   return roleModel;
 }

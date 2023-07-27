@@ -10,6 +10,8 @@
     "test:dev": "jest --watch --silent --runInBand --coverage=false --reporters='default'",
     "test:dev:verbose": "jest --watch --verbose=true",
     "db:migrate": "cd data-access && sequelize-cli db:migrate",
+    "db:migrate-undo": "cd data-access && sequelize-cli db:migrate:undo:all",
+    "db:seed": "cd data-access && sequelize-cli db:seed:all",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "installDependencies": "npm install"
