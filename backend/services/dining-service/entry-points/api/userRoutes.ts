@@ -9,8 +9,6 @@ export default function defineUserRoutes(expressApp: express.Application) {
     try {
       logger.info(`Order API was called to get all users from db`);
       const response = await userUseCase.getUsers();
-      // eslint-disable-next-line no-console
-      console.log(response);
 
       if (!response) {
         res.status(404).end();

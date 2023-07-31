@@ -40,7 +40,7 @@ export default function getDbConnection() {
     getPermissionModel();
 
     establishAssociations();
-    // dbConnection.sync({ alter: true }); // <-- Add this line
+    // dbConnection.sync({ alter: true });
     // eslint-disable-next-line no-console
     console.log('DB & TABLES CREATED');
   }

@@ -31,35 +31,22 @@ type UserRecord = {
 };
 
 export async function getAllUsers(): Promise<UserRecord[] | null> {
-  // eslint-disable-next-line no-console
-  console.log('About to fetch all users with permissions...');
-
   try {
-    const awesomeCaptain = await getUserModel().findAll({
-      include: [
-        {
-          model: getTeamModel(),
-          through: 'UserTeam',
-        },
-        {
-          model: getPermissionModel(),
-          through: 'UserPermission',
-        },
-      ],
-    });
+    const allUsers = getUserModel().findAll();
+    return allUsers;
+  } catch (error) {
     // eslint-disable-next-line no-console
-    console.log(awesomeCaptain);
-    return awesomeCaptain;
+    console.error('Error in getAllUsers:', error);
+    throw error; // Rethrow the error to be handled at the higher level
+  }
+}
 
-    // const oneUser = await getUserModel().findByPk(1, {
-    //   include: [
-    //     {
-    //       model: getRoleModel(),
-    //       through: { attributes: [] }, // this will exclude the join table attributes
-    //     },
-    //   ],
-    // });
-    // return oneUser;
+export async function getAllUsersWithTeams(): Promise<UserRecord[] | null> {
+  try {
+    const allUsersWithTeams = getUserModel().findAll({
+      include: getTeamModel(),
+    });
+    return allUsersWithTeams;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error in getAllUsers:', error);
