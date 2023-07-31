@@ -8,7 +8,11 @@ import * as configurationProvider from '@practica/configuration-provider';
 import { jwtVerifierMiddleware } from '@practica/jwt-token-verifier';
 import { addRequestIdExpressMiddleware } from '@practica/request-context';
 import configurationSchema from '../../config';
-import defineRoutes from './routes';
+import defineUserRoutes from './userRoutes';
+import getDbConnection from '../../data-access/models/db-connection';
+// import defineRoleRoutes from './roleRoutes';
+// import defineTeamRoutes from './teamRoutes';
+// import definePermissionRoutes from './permissionRoutes';
 
 let connection: Server;
 
@@ -22,6 +26,8 @@ async function startWebServer(): Promise<AddressInfo> {
     },
     true
   );
+  await getDbConnection(); // Add this line
+
   const expressApp = express();
   expressApp.use(addRequestIdExpressMiddleware);
   expressApp.use(helmet());
@@ -32,8 +38,11 @@ async function startWebServer(): Promise<AddressInfo> {
       secret: configurationProvider.getValue('jwtTokenSecret'),
     })
   );
-  defineRoutes(expressApp);
-  defineErrorHandlingMiddleware(expressApp);
+  defineUserRoutes(expressApp);
+  // defineRoleRoutes(expressApp);
+  // defineTeamRoutes(expressApp);
+  // definePermissionRoutes(expressApp);
+  // defineErrorHandlingMiddleware(expressApp);
   const APIAddress = await openConnection(expressApp);
   return APIAddress;
 }

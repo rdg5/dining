@@ -37,6 +37,9 @@ module.exports = {
       createdAt: {
         type: Sequelize.DATE,
       },
+      updatedAt: {
+        type: Sequelize.DATE,
+      },
       permissionId: {
         type: Sequelize.INTEGER,
       },
@@ -66,6 +69,12 @@ module.exports = {
       roleId: {
         type: Sequelize.INTEGER,
       },
+      createdAt: {
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+      },
     });
 
     await queryInterface.createTable('Role', {
@@ -77,6 +86,9 @@ module.exports = {
       role: {
         type: Sequelize.STRING,
       },
+      name: {
+        type: Sequelize.STRING,
+      },
       userId: {
         type: Sequelize.INTEGER,
       },
@@ -85,6 +97,12 @@ module.exports = {
       },
       teamId: {
         type: Sequelize.INTEGER,
+      },
+      createdAt: {
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
       },
     });
 
@@ -106,8 +124,22 @@ module.exports = {
       teamId: {
         type: Sequelize.INTEGER,
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW,
+      },
     });
   },
-
-  down: (queryInterface) => queryInterface.dropTable('User'),
+  down: async (queryInterface) => {
+    await queryInterface.dropTable('Permission', { cascade: true });
+    await queryInterface.dropTable('Role', { cascade: true });
+    await queryInterface.dropTable('Team', { cascade: true });
+    await queryInterface.dropTable('User', { cascade: true });
+  },
 };

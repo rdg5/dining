@@ -1,6 +1,12 @@
-import { Sequelize, Options } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import * as configurationProvider from '@practica/configuration-provider';
 import { logger } from '@practica/logger';
+// import { establishAssociations } from './associations';
+import { getUserModel } from './user-model';
+import { getTeamModel } from './team-model';
+import { getRoleModel } from './role-model';
+import { getPermissionModel } from './permission-model';
+import { establishAssociations } from './associations';
 
 let dbConnection: Sequelize;
 
@@ -28,6 +34,15 @@ export default function getDbConnection() {
         },
       }
     );
+    getUserModel();
+    getTeamModel();
+    getRoleModel();
+    getPermissionModel();
+
+    establishAssociations();
+    // dbConnection.sync({ alter: true }); // <-- Add this line
+    // eslint-disable-next-line no-console
+    console.log('DB & TABLES CREATED');
   }
 
   return dbConnection;

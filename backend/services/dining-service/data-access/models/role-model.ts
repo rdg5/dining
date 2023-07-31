@@ -6,7 +6,6 @@ import {
   Model,
 } from 'sequelize';
 import getDbConnection from './db-connection';
-import { getUserModel } from './user-model';
 
 export interface RoleModelFields
   extends Model<
@@ -15,39 +14,41 @@ export interface RoleModelFields
   > {
   id: CreationOptional<number>;
   role: string;
-  userId: number;
-  permissionId: number;
-  teamId: number;
+  name: string;
+  createdAt: number;
+  updatedAt: number;
 }
+let roleModel;
 
 export function getRoleModel() {
-  const roleModel = getDbConnection().define<RoleModelFields>(
-    'Role',
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+  if (!roleModel) {
+    roleModel = getDbConnection().define<RoleModelFields>(
+      'Role',
+      {
+        id: {
+          type: DataTypes.INTEGER,
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        role: {
+          type: DataTypes.STRING,
+        },
+        name: {
+          type: DataTypes.STRING,
+        },
+
+        createdAt: {
+          type: DataTypes.DATE,
+        },
+        updatedAt: {
+          type: DataTypes.DATE,
+        },
       },
-      role: {
-        type: DataTypes.STRING,
-      },
-      userId: {
-        type: DataTypes.INTEGER,
-      },
-      permissionId: {
-        type: DataTypes.INTEGER,
-      },
-      teamId: {
-        type: DataTypes.INTEGER,
-      },
-    },
-    { freezeTableName: true }
-  );
-  roleModel.belongsToMany(getUserModel(), {
-    through: 'UserTeam', // The junction table name for User and Team
-    foreignKey: 'roleId', // The foreign key in the junction table referencing Team
-    otherKey: 'userId', // The foreign key in the junction table referencing User
-  });
+      { freezeTableName: true }
+    );
+
+    // eslint-disable-next-line no-console
+    console.log('Role model defined!');
+  }
   return roleModel;
 }

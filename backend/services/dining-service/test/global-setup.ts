@@ -25,6 +25,7 @@ export default async () => {
 
     // ️️️✅ Best Practice: Use npm script for data seeding and migrations
     execSync('npm run db:migrate');
+    execSync('npm run db:seed');
   }
 
   // 👍🏼 We're ready
