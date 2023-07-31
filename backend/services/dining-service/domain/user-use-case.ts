@@ -7,3 +7,7 @@ export async function getUsers() {
 export async function getUsersWithTeams() {
   return await userRepository.getAllUsersWithTeams();
 }
+
+export async function createNewUser(requestBody) {
+  return await userRepository.saveNewUser(requestBody);
+}

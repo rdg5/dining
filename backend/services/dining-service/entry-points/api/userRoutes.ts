@@ -21,5 +21,21 @@ export default function defineUserRoutes(expressApp: express.Application) {
     }
   });
 
+  router.post('/', async (req, res, next) => {
+    try {
+      logger.info(`Order API was called to get all users from db`);
+      const response = await userUseCase.createNewUser(req.body);
+
+      if (!response) {
+        res.status(404).end();
+        return;
+      }
+
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
   expressApp.use('/api/users', router);
 }

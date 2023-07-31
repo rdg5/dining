@@ -53,3 +53,16 @@ export async function getAllUsersWithTeams(): Promise<UserRecord[] | null> {
     throw error; // Rethrow the error to be handled at the higher level
   }
 }
+export async function saveNewUser(requestBody): Promise<UserRecord[] | null> {
+  try {
+    const allUsersWithTeams = getUserModel().findAll({
+      include: getTeamModel(),
+    });
+    return allUsersWithTeams;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error in getAllUsers:', error);
+    throw error; // Rethrow the error to be handled at the higher level
+  }
+}
+
