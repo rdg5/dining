@@ -10,9 +10,9 @@ import { addRequestIdExpressMiddleware } from '@practica/request-context';
 import configurationSchema from '../../config';
 import defineUserRoutes from './userRoutes';
 import getDbConnection from '../../data-access/models/db-connection';
-// import defineRoleRoutes from './roleRoutes';
-// import defineTeamRoutes from './teamRoutes';
-// import definePermissionRoutes from './permissionRoutes';
+import defineRoleRoutes from './roleRoutes';
+import defineTeamRoutes from './teamRoutes';
+import definePermissionRoutes from './permissionRoutes';
 
 let connection: Server;
 
@@ -39,10 +39,10 @@ async function startWebServer(): Promise<AddressInfo> {
     })
   );
   defineUserRoutes(expressApp);
-  // defineRoleRoutes(expressApp);
-  // defineTeamRoutes(expressApp);
-  // definePermissionRoutes(expressApp);
-  // defineErrorHandlingMiddleware(expressApp);
+  defineRoleRoutes(expressApp);
+  defineTeamRoutes(expressApp);
+  definePermissionRoutes(expressApp);
+  defineErrorHandlingMiddleware(expressApp);
   const APIAddress = await openConnection(expressApp);
   return APIAddress;
 }

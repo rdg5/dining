@@ -1,20 +1,9 @@
-// export async function getOrderById(id: number): Promise<OrderRecord | null> {
-//   const foundOrder = await getOrderModel().findOne({
-//     where: { id },
-//     include: getCountryModel(),
-//     // ✅ Best Practice: The data access layer should return a plain JS object and avoid leaking DB narratives outside
-//     // The 'Raw' option below instructs to include only pure data within the response
-//     raw: true,
-//     nest: true,
-//   });
-
+/* eslint-disable no-console */
+import { Op } from 'sequelize';
 import { getPermissionModel } from './models/permission-model';
 import { getRoleModel } from './models/role-model';
 import { getTeamModel } from './models/team-model';
 import { getUserModel } from './models/user-model';
-
-//   return foundOrder;
-// }
 
 type UserRecord = {
   id: number;
@@ -32,12 +21,11 @@ type UserRecord = {
 
 export async function getAllUsers(): Promise<UserRecord[] | null> {
   try {
-    const allUsers = getUserModel().findAll();
+    const allUsers = getUserModel().findAll({ raw: true });
     return allUsers;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error in getAllUsers:', error);
-    throw error; // Rethrow the error to be handled at the higher level
+    throw error;
   }
 }
 
@@ -48,21 +36,37 @@ export async function getAllUsersWithTeams(): Promise<UserRecord[] | null> {
     });
     return allUsersWithTeams;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error in getAllUsers:', error);
-    throw error; // Rethrow the error to be handled at the higher level
-  }
-}
-export async function saveNewUser(requestBody): Promise<UserRecord[] | null> {
-  try {
-    const allUsersWithTeams = getUserModel().findAll({
-      include: getTeamModel(),
-    });
-    return allUsersWithTeams;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error in getAllUsers:', error);
-    throw error; // Rethrow the error to be handled at the higher level
+    throw error;
   }
 }
 
+export async function getUserByUsernameOrEmail(
+  username: string,
+  email: string
+) {
+  try {
+    const existingUser = await getUserModel().findOne({
+      where: {
+        [Op.or]: [{ username }, { email }],
+      },
+      raw: true,
+    });
+    return existingUser;
+  } catch (error) {
+    console.error('Error in getUserByUsername:', error);
+    throw error;
+  }
+}
+
+export async function saveNewUser(
+  newUserData: Omit<UserRecord, 'id'>
+): Promise<UserRecord[] | null> {
+  try {
+    const addedUser = await getUserModel().create(newUserData);
+    return addedUser;
+  } catch (error) {
+    console.error('Error in getAllUsers:', error);
+    throw error;
+  }
+}
