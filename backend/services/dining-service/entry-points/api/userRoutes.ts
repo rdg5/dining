@@ -2,6 +2,7 @@ import express from 'express';
 import { logger } from '@practica/logger';
 import { AppError } from '@practica/error-handling';
 import * as userUseCase from '../../domain/user-use-case';
+import { RequestWithUserId } from './userInterfaces';
 
 export default function defineUserRoutes(expressApp: express.Application) {
   const router = express.Router();
@@ -13,6 +14,30 @@ export default function defineUserRoutes(expressApp: express.Application) {
 
       if (!response) {
         res.status(404).end();
+        return;
+      }
+
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  router.get('/:userId', async (req: RequestWithUserId, res, next) => {
+    const userId = Number(req.params.userId);
+    try {
+      logger.info(
+        `Order API was called to get one user with id ${req.params.userId} from db`
+      );
+      if (Number.isNaN(userId) || Number(userId) < 1) {
+        res.status(400).send({ message: 'userId must be a valid number.' });
+        return;
+      }
+
+      const response = await userUseCase.getUserById(userId);
+
+      if (!response) {
+        res.status(404).json({ error: 'User not found' }).end();
         return;
       }
 

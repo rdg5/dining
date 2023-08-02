@@ -21,8 +21,20 @@ type UserRecord = {
 
 export async function getAllUsers(): Promise<UserRecord[] | null> {
   try {
-    const allUsers = getUserModel().findAll({ raw: true });
+    const allUsers = await getUserModel().findAll({ raw: true });
     return allUsers;
+  } catch (error) {
+    console.error('Error in getAllUsers:', error);
+    throw error;
+  }
+}
+
+export async function getUserByUserId(
+  userId: number
+): Promise<UserRecord[] | null> {
+  try {
+    const existingUserById = await getUserModel().findByPk(userId);
+    return existingUserById;
   } catch (error) {
     console.error('Error in getAllUsers:', error);
     throw error;
@@ -31,7 +43,7 @@ export async function getAllUsers(): Promise<UserRecord[] | null> {
 
 export async function getAllUsersWithTeams(): Promise<UserRecord[] | null> {
   try {
-    const allUsersWithTeams = getUserModel().findAll({
+    const allUsersWithTeams = await getUserModel().findAll({
       include: getTeamModel(),
     });
     return allUsersWithTeams;

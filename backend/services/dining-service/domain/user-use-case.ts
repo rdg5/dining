@@ -8,6 +8,10 @@ export async function getUsers() {
   return await userRepository.getAllUsers();
 }
 
+export async function getUserById(userId: number) {
+  return await userRepository.getUserByUserId(userId);
+}
+
 export async function getUsersWithTeams() {
   return await userRepository.getAllUsersWithTeams();
 }
