@@ -78,7 +78,23 @@ export async function saveNewUser(
     const addedUser = await getUserModel().create(newUserData);
     return addedUser;
   } catch (error) {
-    console.error('Error in getAllUsers:', error);
+    console.error('Error in saveNewUser:', error);
+    throw error;
+  }
+}
+
+export async function updateExistingUser(
+  userId: number,
+  userDetails
+): Promise<UserRecord[] | null> {
+  try {
+    await getUserModel().update(userDetails, {
+      where: { id: userId },
+    });
+    const updatedUser = await getUserModel().findByPk(userId);
+    return updatedUser;
+  } catch (error) {
+    console.error('Error in updateExistingUser', error);
     throw error;
   }
 }

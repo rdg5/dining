@@ -2,7 +2,12 @@
 import ajv from '@practica/validation/ajv-cache';
 import { AppError } from '@practica/error-handling';
 import * as userRepository from '../data-access/user-repository';
-import { addUserDTO, userSchema } from './userSchema';
+import {
+  addUserDTO,
+  editUserDTO,
+  editUserSchema,
+  userSchema,
+} from './userSchema';
 
 export async function getUsers() {
   return await userRepository.getAllUsers();
@@ -21,6 +26,12 @@ export async function createNewUser(requestBody) {
   await assertEmailAndUsernameAreUnique(requestBody);
 
   return await userRepository.saveNewUser(requestBody);
+}
+
+// TODO: add unique email and username check 
+export async function editExistingUser(userId: number, requestBody) {
+  assertEditingDataIsValid(requestBody);
+  return await userRepository.updateExistingUser(userId, requestBody);
 }
 
 async function assertEmailAndUsernameAreUnique(requestBody: addUserDTO) {
@@ -57,5 +68,12 @@ function assertUserIsValid(userToBeCreated: addUserDTO) {
   const isValid = ajv.validate(userSchema, userToBeCreated);
   if (isValid === false) {
     throw new AppError('invalid-user-creation', `Validation failed`, 400, true);
+  }
+}
+
+function assertEditingDataIsValid(userToBeEdited: editUserDTO) {
+  const isValid = ajv.validate(editUserSchema, userToBeEdited);
+  if (isValid === false) {
+    throw new AppError('invalid-user-editing', `Validation failed`, 400, true);
   }
 }

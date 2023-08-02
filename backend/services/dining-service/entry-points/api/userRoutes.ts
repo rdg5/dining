@@ -59,11 +59,37 @@ export default function defineUserRoutes(expressApp: express.Application) {
       res.status(201).json(response);
     } catch (error) {
       if (error instanceof AppError) {
-        next(error);
         res.status(error.HTTPStatus).json({ error: error.message });
+        next(error);
       }
     }
   });
 
+  router.patch('/:userId', async (req: RequestWithUserId, res, next) => {
+    const userId = Number(req.params.userId);
+    try {
+      logger.info(
+        `Order API was called to edit user with id ${req.params.userId} from db`
+      );
+
+      if (Number.isNaN(userId) || Number(userId) < 1) {
+        res.status(400).send({ message: 'userId must be a valid number.' });
+        return;
+      }
+
+      const response = await userUseCase.editExistingUser(userId, req.body);
+
+      if (!response) {
+        res.status(404).json({ error: 'User not found' }).end();
+        return;
+      }
+      res.status(201).json(response);
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.HTTPStatus).json({ error: error.message });
+        next(error);
+      }
+    }
+  });
   expressApp.use('/api/users', router);
 }
