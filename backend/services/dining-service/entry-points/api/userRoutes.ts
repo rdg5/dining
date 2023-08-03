@@ -30,7 +30,7 @@ export default function defineUserRoutes(expressApp: express.Application) {
         `Order API was called to get one user with id ${req.params.userId} from db`
       );
       if (Number.isNaN(userId) || Number(userId) < 1) {
-        res.status(400).send({ message: 'userId must be a valid number.' });
+        res.status(400).send({ error: 'userId must be a valid number.' });
         return;
       }
 
@@ -73,7 +73,7 @@ export default function defineUserRoutes(expressApp: express.Application) {
       );
 
       if (Number.isNaN(userId) || Number(userId) < 1) {
-        res.status(400).send({ message: 'userId must be a valid number.' });
+        res.status(400).send({ error: 'userId must be a valid number.' });
         return;
       }
 
@@ -99,7 +99,7 @@ export default function defineUserRoutes(expressApp: express.Application) {
         `Order API was called to get one user with id ${req.params.userId} from db`
       );
       if (Number.isNaN(userId) || Number(userId) < 1) {
-        res.status(400).send({ message: 'userId must be a valid number.' });
+        res.status(400).send({ error: 'userId must be a valid number.' });
         return;
       }
 

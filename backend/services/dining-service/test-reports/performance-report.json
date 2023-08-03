@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "duration": 58,
+    "fullName": "/api GET /user When asked for existing users, Then should retrieve and receive 200 response along with existing fields",
+    "status": "passed"
+  },
+  {
+    "duration": 6,
+    "fullName": "/api When asked for existing users, Then should retrieve them and receive 200 response ",
+    "status": "passed"
+  },
+  {
+    "duration": 5,
+    "fullName": "When asked for one specific user by id, Then should retrieve it and receive 200 response",
+    "status": "passed"
+  },
+  {
+    "duration": 3,
+    "fullName": "When asked for a non-existent user by id, Then should retrieve error and receive 404 response",
+    "status": "passed"
+  },
+  {
+    "duration": 2,
+    "fullName": "When asked for a user by non-valid number id, Then should retrieve error and receive 400 response",
+    "status": "passed"
+  },
+  {
+    "duration": 1,
+    "fullName": "When asked for a user by non-valid number id, Then should retrieve error and receive 400 response",
+    "status": "passed"
+  }
+]

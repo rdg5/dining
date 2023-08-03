@@ -23,7 +23,7 @@ type UserRecord = {
 export async function getAllUsers(): Promise<UserRecord[] | null> {
   try {
     const allUsers = await getUserModel().findAll({
-      attributes: ['id', 'username', 'email', 'verifiedAt'],
+      attributes: ['id', 'username', 'email'],
       raw: true,
     });
     return allUsers;
@@ -38,7 +38,7 @@ export async function getUserByUserId(
 ): Promise<UserRecord | null> {
   try {
     const existingUserById = await getUserModel().findByPk(userId, {
-      attributes: ['id', 'username', 'email', 'verifiedAt'],
+      attributes: ['id', 'username', 'email'],
     });
     return existingUserById;
   } catch (error) {
@@ -127,7 +127,7 @@ export async function saveNewUser(
 ): Promise<UserRecord | null> {
   try {
     const addedUser = await getUserModel().create(newUserData, {
-      attributes: ['id', 'username', 'email', 'verifiedAt'],
+      attributes: ['id', 'username', 'email'],
       raw: true,
     });
     return addedUser;
@@ -146,7 +146,7 @@ export async function updateExistingUserById(
       where: { id: userId },
     });
     const updatedUser = await getUserModel().findByPk(userId, {
-      attributes: ['id', 'username', 'email', 'verifiedAt'],
+      attributes: ['id', 'username', 'email'],
       raw: true,
     });
     return updatedUser;
@@ -176,7 +176,7 @@ export async function deleteExistingUser(
 ): Promise<UserRecord | null> {
   try {
     const userToBeDeleted = await getUserModel().findByPk(userId, {
-      attributes: ['id', 'username', 'email', 'verifiedAt'],
+      attributes: ['id', 'username', 'email'],
       raw: true,
     });
     await getUserModel().destroy({
