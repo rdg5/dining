@@ -91,5 +91,29 @@ export default function defineUserRoutes(expressApp: express.Application) {
       }
     }
   });
+
+  router.delete('/:userId', async (req: RequestWithUserId, res, next) => {
+    const userId = Number(req.params.userId);
+    try {
+      logger.info(
+        `Order API was called to get one user with id ${req.params.userId} from db`
+      );
+      if (Number.isNaN(userId) || Number(userId) < 1) {
+        res.status(400).send({ message: 'userId must be a valid number.' });
+        return;
+      }
+
+      const response = await userUseCase.deleteUserById(userId);
+
+      if (!response) {
+        res.status(404).json({ error: 'User not found' }).end();
+        return;
+      }
+
+      res.status(204).end();
+    } catch (error) {
+      next(error);
+    }
+  });
   expressApp.use('/api/users', router);
 }

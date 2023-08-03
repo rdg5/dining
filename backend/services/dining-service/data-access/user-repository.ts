@@ -91,10 +91,27 @@ export async function updateExistingUser(
     await getUserModel().update(userDetails, {
       where: { id: userId },
     });
-    const updatedUser = await getUserModel().findByPk(userId);
-    return updatedUser;
+    const userToBeUpdated = await getUserModel().findByPk(userId);
+    return userToBeUpdated;
   } catch (error) {
     console.error('Error in updateExistingUser', error);
+    throw error;
+  }
+}
+
+export async function deleteExistingUser(
+  userId: number
+): Promise<UserRecord[] | null> {
+  try {
+    const userToBeDeleted = await getUserModel().findByPk(userId);
+    await getUserModel().destroy({
+      where: {
+        id: userId,
+      },
+    });
+    return userToBeDeleted;
+  } catch (error) {
+    console.error('Error in deleteExistingUser', error);
     throw error;
   }
 }

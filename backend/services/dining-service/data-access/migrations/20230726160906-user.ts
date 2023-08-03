@@ -51,6 +51,9 @@ module.exports = {
       teamId: {
         type: Sequelize.INTEGER,
       },
+      deletedAt: {
+        type: Sequelize.DATE,
+      },
     });
 
     await queryInterface.createTable('Team', {

@@ -28,10 +28,14 @@ export async function createNewUser(requestBody) {
   return await userRepository.saveNewUser(requestBody);
 }
 
-// TODO: add unique email and username check 
+// TODO: add unique email and username check
 export async function editExistingUser(userId: number, requestBody) {
   assertEditingDataIsValid(requestBody);
   return await userRepository.updateExistingUser(userId, requestBody);
+}
+
+export async function deleteUserById(userId: number) {
+  return await userRepository.deleteExistingUser(userId);
 }
 
 async function assertEmailAndUsernameAreUnique(requestBody: addUserDTO) {

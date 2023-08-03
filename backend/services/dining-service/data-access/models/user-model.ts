@@ -23,6 +23,7 @@ export interface UserModelFields
   forgottenPasswordTokenExpiresAt: number;
   createdAt: number;
   updatedAt: number;
+  deletedAt: number;
 }
 let userModel;
 export function getUserModel() {
@@ -67,8 +68,11 @@ export function getUserModel() {
         updatedAt: {
           type: DataTypes.DATE,
         },
+        deletedAt: {
+          type: DataTypes.DATE,
+        },
       },
-      { freezeTableName: true }
+      { freezeTableName: true, paranoid: true }
     );
 
     // eslint-disable-next-line no-console
