@@ -1,7 +1,7 @@
 [
   {
-    "duration": 58,
-    "fullName": "/api GET /user When asked for existing users, Then should retrieve and receive 200 response along with existing fields",
+    "duration": 62,
+    "fullName": "/api GET /users When asked for existing users, Then should retrieve and receive 200 response along with existing fields",
     "status": "passed"
   },
   {
@@ -10,7 +10,7 @@
     "status": "passed"
   },
   {
-    "duration": 5,
+    "duration": 4,
     "fullName": "When asked for one specific user by id, Then should retrieve it and receive 200 response",
     "status": "passed"
   },
@@ -25,8 +25,23 @@
     "status": "passed"
   },
   {
-    "duration": 1,
-    "fullName": "When asked for a user by non-valid number id, Then should retrieve error and receive 400 response",
+    "duration": 3,
+    "fullName": "When asked for a user by string instead of number as id, Then should retrieve error and receive 400 response",
+    "status": "passed"
+  },
+  {
+    "duration": 106,
+    "fullName": "/api POST /users When asked to save a new user, Then it saves it and returns the newly created user",
+    "status": "passed"
+  },
+  {
+    "duration": 9,
+    "fullName": "/api POST /users When asked to save a new user with already existing username, Then it returns an error with status 409",
+    "status": "passed"
+  },
+  {
+    "duration": 6,
+    "fullName": "/api POST /users When asked to save a new user with already existing email, Then it returns an error with status 409",
     "status": "passed"
   }
 ]

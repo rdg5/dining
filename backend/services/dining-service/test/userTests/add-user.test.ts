@@ -3,6 +3,7 @@ import nock from 'nock';
 import sinon from 'sinon';
 import { startWebServer, stopWebServer } from '../../entry-points/api/server';
 import * as testHelpers from '../test-helpers';
+import * as createNewUser from '../../domain/user-use-case';
 
 let axiosAPIClient;
 
@@ -39,23 +40,95 @@ afterAll(async () => {
 });
 
 describe('/api', () => {
-  describe('GET /user', () => {
-    test('When asked for existing users, Then should retrieve and receive 200 response along with existing fields', async () => {
-      const getResponse = await axiosAPIClient.get(`/api/users`);
+  describe('POST /users', () => {
+    test('When asked to save a new user, Then it saves it and returns the newly created user', async () => {
+      const newUserToBeCreated = {
+        username: 'newUser1',
+        email: 'newUser1@example.com',
+        password: 'password123',
+      };
+      const createdNewUser = {
+        username: 'newUser1',
+        email: 'newUser1@example.com',
+      };
 
-      expect(getResponse).toMatchObject({
-        status: 200,
-      });
+      const postResponse = await axiosAPIClient.post(
+        `/api/users`,
+        newUserToBeCreated
+      );
 
-      expect(Array.isArray(getResponse.data)).toBeTruthy();
+      expect(postResponse.status).toBe(201);
 
-      getResponse.data.forEach((user) => {
-        expect(user).toHaveProperty('id');
-        expect(user).toHaveProperty('username');
-        expect(user).toHaveProperty('email');
+      expect(postResponse.data).toHaveProperty('id');
+      expect(typeof postResponse.data.id).toBe('number');
+
+      const newUserId = postResponse.data.id;
+
+      const getResponse = await axiosAPIClient.get(`/api/users/${newUserId}`);
+
+      expect(getResponse.status).toBe(200);
+      expect(getResponse.data).toMatchObject({
+        ...createdNewUser,
+        id: newUserId,
       });
     });
+
+    test('When asked to save a new user with already existing username, Then it returns an error with status 409', async () => {
+      const newUserToBeCreated = {
+        username: 'newUser1',
+        email: 'newUser1@example.com',
+        password: 'password123',
+      };
+      const postResponse = await axiosAPIClient.post(
+        `/api/users`,
+        newUserToBeCreated
+      );
+
+      expect(postResponse.status).toBe(409);
+
+      expect(postResponse.data).toHaveProperty('error');
+      expect(typeof postResponse.data.error).toBe('string');
+      expect(postResponse.data.error).toBe('Username already in use');
+    });
+
+    test('When asked to save a new user with already existing email, Then it returns an error with status 409', async () => {
+      const newUserToBeCreated = {
+        username: 'newUser999',
+        email: 'newUser1@example.com',
+        password: 'password123',
+      };
+      const postResponse = await axiosAPIClient.post(
+        `/api/users`,
+        newUserToBeCreated
+      );
+
+      expect(postResponse.status).toBe(409);
+
+      expect(postResponse.data).toHaveProperty('error');
+      expect(typeof postResponse.data.error).toBe('string');
+      expect(postResponse.data.error).toBe('Email already in use');
+    });
+
+    // TODO: fix stubbing issue for testing if the returned user is null and status is 404
+
+    //   test('When user creation fails, then it should return status 404', async () => {
+    //     const createNewUserStub = sinon
+    //       .stub(createNewUser, 'createNewUser')
+    //       .returns(Promise.resolve(null));
+    //   });
+    //   const newUserToBeCreated = {
+    //     username: 'newUser999',
+    //     email: 'newUser1@example.com',
+    //     password: 'password123',
+    //   };
+
+    //   const postResponse = await axiosAPIClient.post(
+    //     `/api/users`,
+    //     newUserToBeCreated
+    //   );
+
+    //   expect(postResponse.status).toBe(404);
+    // });
   });
 });
-
 export {};

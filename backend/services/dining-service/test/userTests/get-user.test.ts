@@ -39,7 +39,7 @@ afterAll(async () => {
 });
 
 describe('/api', () => {
-  describe('GET /user', () => {
+  describe('GET /users', () => {
     test('When asked for existing users, Then should retrieve and receive 200 response along with existing fields', async () => {
       const getResponse = await axiosAPIClient.get(`/api/users`);
 
@@ -99,7 +99,7 @@ test('When asked for one specific user by id, Then should retrieve it and receiv
 
 test('When asked for a non-existent user by id, Then should retrieve error and receive 404 response', async () => {
   const errorResponse = { error: 'User not found' };
-  const getNonExistentUserResponse = await axiosAPIClient.get(`/api/users/4`);
+  const getNonExistentUserResponse = await axiosAPIClient.get(`/api/users/999`);
 
   expect(getNonExistentUserResponse).toMatchObject({
     status: 404,
