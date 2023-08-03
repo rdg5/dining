@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 import ajv from '@practica/validation/ajv-cache';
+import { v4 as uuidv4 } from 'uuid';
+
 import { AppError } from '@practica/error-handling';
 import * as userRepository from '../data-access/user-repository';
 import {
@@ -28,22 +30,35 @@ export async function createNewUser(requestBody) {
   return await userRepository.saveNewUser(requestBody);
 }
 
-// TODO: add unique email and username check
 export async function editExistingUser(userId: number, requestBody) {
   assertEditingDataIsValid(requestBody);
-  return await userRepository.updateExistingUser(userId, requestBody);
+  await assertEmailAndUsernameAreUnique(requestBody, userId);
+  return await userRepository.updateExistingUserById(userId, requestBody);
 }
 
 export async function deleteUserById(userId: number) {
-  return await userRepository.deleteExistingUser(userId);
+  const userExistsforDeletion = await userRepository.getUserByUserId(userId);
+  if (userExistsforDeletion) {
+    userExistsforDeletion.username += `-${uuidv4()}`;
+    userExistsforDeletion.email += `-${uuidv4()}`;
+
+    await userRepository.updateExistingUserByUser(userExistsforDeletion);
+  }
+  await userRepository.deleteExistingUser(userId);
+  return userExistsforDeletion;
 }
 
-async function assertEmailAndUsernameAreUnique(requestBody: addUserDTO) {
+async function assertEmailAndUsernameAreUnique(
+  requestBody: addUserDTO,
+  userId?: number
+) {
   const { username, email } = requestBody;
-  const alreadyExistingUser = await userRepository.getUserByUsernameOrEmail(
-    username,
-    email
-  );
+  const alreadyExistingUser =
+    await userRepository.getUserByUsernameOrEmailExceptCurrent(
+      username,
+      email,
+      userId
+    );
 
   if (alreadyExistingUser !== null) {
     const { username: existingUsername, email: existingEmail } =
@@ -57,7 +72,7 @@ async function assertEmailAndUsernameAreUnique(requestBody: addUserDTO) {
         true
       );
     }
-    if (alreadyExistingUser !== null && existingEmail === email) {
+    if (existingEmail === email) {
       throw new AppError(
         'validation-failed',
         `Email already in use`,

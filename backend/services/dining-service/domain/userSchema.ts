@@ -2,16 +2,18 @@ import { Static, Type } from '@sinclair/typebox';
 import ajv from '@practica/validation';
 
 export const userSchema = Type.Object({
-  username: Type.String(),
-  email: Type.String(),
-  password: Type.String(),
+  username: Type.String({ minLength: 1 }),
+  email: Type.RegEx(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/),
+  password: Type.String({ minLength: 1 }),
 });
 
 export const editUserSchema = Type.Object(
   {
-    username: Type.Optional(Type.String()),
-    email: Type.Optional(Type.String()),
-    password: Type.Optional(Type.String()),
+    username: Type.Optional(Type.String({ minLength: 1 })),
+    email: Type.Optional(
+      Type.RegEx(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)
+    ),
+    password: Type.Optional(Type.String({ minLength: 1 })),
   },
   { additionalProperties: false, minProperties: 1 }
 );

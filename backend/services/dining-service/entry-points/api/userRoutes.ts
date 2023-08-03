@@ -115,5 +115,6 @@ export default function defineUserRoutes(expressApp: express.Application) {
       next(error);
     }
   });
+
   expressApp.use('/api/users', router);
 }

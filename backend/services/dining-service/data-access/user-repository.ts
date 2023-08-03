@@ -17,11 +17,15 @@ type UserRecord = {
   forgottenPasswordTokenExpiresAt: number;
   createdAt: number;
   updatedAt: number;
+  deletedAt: number;
 };
 
 export async function getAllUsers(): Promise<UserRecord[] | null> {
   try {
-    const allUsers = await getUserModel().findAll({ raw: true });
+    const allUsers = await getUserModel().findAll({
+      attributes: ['id', 'username', 'email', 'verifiedAt'],
+      raw: true,
+    });
     return allUsers;
   } catch (error) {
     console.error('Error in getAllUsers:', error);
@@ -31,9 +35,11 @@ export async function getAllUsers(): Promise<UserRecord[] | null> {
 
 export async function getUserByUserId(
   userId: number
-): Promise<UserRecord[] | null> {
+): Promise<UserRecord | null> {
   try {
-    const existingUserById = await getUserModel().findByPk(userId);
+    const existingUserById = await getUserModel().findByPk(userId, {
+      attributes: ['id', 'username', 'email', 'verifiedAt'],
+    });
     return existingUserById;
   } catch (error) {
     console.error('Error in getAllUsers:', error);
@@ -53,6 +59,31 @@ export async function getAllUsersWithTeams(): Promise<UserRecord[] | null> {
   }
 }
 
+export async function getUserByUsernameOrEmailExceptCurrent(
+  username: string,
+  email: string,
+  userId?: number
+) {
+  try {
+    const conditions: any = {
+      [Op.or]: [{ username }, { email }],
+    };
+
+    if (userId) {
+      conditions[Op.and] = [{ id: { [Op.ne]: userId } }];
+    }
+
+    const existingUser = await getUserModel().findOne({
+      where: conditions,
+    });
+
+    return existingUser;
+  } catch (error) {
+    console.error('Error in getUserByUsernameOrEmailExceptCurrent:', error);
+    throw error;
+  }
+}
+
 export async function getUserByUsernameOrEmail(
   username: string,
   email: string
@@ -62,7 +93,6 @@ export async function getUserByUsernameOrEmail(
       where: {
         [Op.or]: [{ username }, { email }],
       },
-      raw: true,
     });
     return existingUser;
   } catch (error) {
@@ -71,11 +101,35 @@ export async function getUserByUsernameOrEmail(
   }
 }
 
+export async function getSoftDeletedUserByUsernameOrEmail(
+  username: string,
+  email: string
+): Promise<UserRecord | null> {
+  try {
+    const user = await getUserModel().findOne({
+      where: {
+        [Op.or]: [{ username }, { email }],
+        deletedAt: {
+          [Op.ne]: null,
+        },
+      },
+      raw: true,
+    });
+    return user;
+  } catch (error) {
+    console.error('Error in getSoftDeletedUserByUsernameOrEmail:', error);
+    throw error;
+  }
+}
+
 export async function saveNewUser(
   newUserData: Omit<UserRecord, 'id'>
-): Promise<UserRecord[] | null> {
+): Promise<UserRecord | null> {
   try {
-    const addedUser = await getUserModel().create(newUserData);
+    const addedUser = await getUserModel().create(newUserData, {
+      attributes: ['id', 'username', 'email', 'verifiedAt'],
+      raw: true,
+    });
     return addedUser;
   } catch (error) {
     console.error('Error in saveNewUser:', error);
@@ -83,27 +137,48 @@ export async function saveNewUser(
   }
 }
 
-export async function updateExistingUser(
+export async function updateExistingUserById(
   userId: number,
   userDetails
-): Promise<UserRecord[] | null> {
+): Promise<UserRecord | null> {
   try {
     await getUserModel().update(userDetails, {
       where: { id: userId },
     });
-    const userToBeUpdated = await getUserModel().findByPk(userId);
-    return userToBeUpdated;
+    const updatedUser = await getUserModel().findByPk(userId, {
+      attributes: ['id', 'username', 'email', 'verifiedAt'],
+      raw: true,
+    });
+    return updatedUser;
   } catch (error) {
     console.error('Error in updateExistingUser', error);
     throw error;
   }
 }
 
+export async function updateExistingUserByUser(
+  user: UserRecord
+): Promise<UserRecord> {
+  try {
+    await getUserModel().update(
+      { username: user.username, email: user.email },
+      { where: { id: user.id } }
+    );
+    return user;
+  } catch (error) {
+    console.error('Error in updateUser:', error);
+    throw error;
+  }
+}
+
 export async function deleteExistingUser(
   userId: number
-): Promise<UserRecord[] | null> {
+): Promise<UserRecord | null> {
   try {
-    const userToBeDeleted = await getUserModel().findByPk(userId);
+    const userToBeDeleted = await getUserModel().findByPk(userId, {
+      attributes: ['id', 'username', 'email', 'verifiedAt'],
+      raw: true,
+    });
     await getUserModel().destroy({
       where: {
         id: userId,
