@@ -109,26 +109,23 @@ describe('/api', () => {
       expect(postResponse.data.error).toBe('Email already in use');
     });
 
-    // TODO: fix stubbing issue for testing if the returned user is null and status is 404
+    test('When user creation fails, then it should return status 404', async () => {
+      const createNewUserStub = sinon
+        .stub(createNewUser, 'createNewUser')
+        .returns(Promise.resolve(null));
+      const newUserToBeCreated = {
+        username: 'newUser999',
+        email: 'newUser1@example.com',
+        password: 'password123',
+      };
 
-    //   test('When user creation fails, then it should return status 404', async () => {
-    //     const createNewUserStub = sinon
-    //       .stub(createNewUser, 'createNewUser')
-    //       .returns(Promise.resolve(null));
-    //   });
-    //   const newUserToBeCreated = {
-    //     username: 'newUser999',
-    //     email: 'newUser1@example.com',
-    //     password: 'password123',
-    //   };
+      const postResponse = await axiosAPIClient.post(
+        `/api/users`,
+        newUserToBeCreated
+      );
 
-    //   const postResponse = await axiosAPIClient.post(
-    //     `/api/users`,
-    //     newUserToBeCreated
-    //   );
-
-    //   expect(postResponse.status).toBe(404);
-    // });
+      expect(postResponse.status).toBe(404);
+    });
   });
 });
 export {};

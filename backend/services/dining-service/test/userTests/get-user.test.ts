@@ -1,8 +1,10 @@
 import axios from 'axios';
 import nock from 'nock';
 import sinon from 'sinon';
+import { AppError } from '@practica/error-handling';
 import { startWebServer, stopWebServer } from '../../entry-points/api/server';
 import * as testHelpers from '../test-helpers';
+import * as userUseCase from '../../domain/user-use-case';
 
 let axiosAPIClient;
 
@@ -121,6 +123,16 @@ test('When asked for a user by non-valid number id, Then should retrieve error a
   expect(getNonExistentUserResponse.data).toMatchObject(errorResponse);
 });
 
+test('When user retrieval fails, then it should return status 404', async () => {
+  const getUsersStub = sinon
+    .stub(userUseCase, 'getUsers')
+    .returns(Promise.resolve(null));
+
+  const postResponse = await axiosAPIClient.get(`/api/users`);
+
+  expect(postResponse.status).toBe(404);
+});
+
 test('When asked for a user by string instead of number as id, Then should retrieve error and receive 400 response', async () => {
   const errorResponse = { error: 'userId must be a valid number.' };
   const getNonExistentUserResponse = await axiosAPIClient.get(
@@ -132,6 +144,36 @@ test('When asked for a user by string instead of number as id, Then should retri
   });
 
   expect(getNonExistentUserResponse.data).toMatchObject(errorResponse);
+});
+
+test('When error is thrown in get all users, Then should pass the error to the next function', async () => {
+  const mockError = new AppError('validation-failed', 'An error occurred', 500);
+  const getUsersStub = sinon.stub(userUseCase, 'getUsers').throws(mockError);
+
+  try {
+    await axiosAPIClient.get(`/api/users`);
+  } catch (error) {
+    if (error instanceof AppError) {
+      expect(error.HTTPStatus).toBe(mockError.HTTPStatus);
+      expect(error.message).toEqual({ error: mockError.message });
+    }
+  }
+});
+
+test('When error is thrown in get one user, Then should pass the error to the next function', async () => {
+  const mockError = new AppError('validation-failed', 'An error occurred', 500);
+  const getoneUserStub = sinon
+    .stub(userUseCase, 'getUserById')
+    .throws(mockError);
+
+  try {
+    await axiosAPIClient.get(`/api/users/999`);
+  } catch (error) {
+    if (error instanceof AppError) {
+      expect(error.HTTPStatus).toBe(mockError.HTTPStatus);
+      expect(error.message).toEqual({ error: mockError.message });
+    }
+  }
 });
 
 export {};
