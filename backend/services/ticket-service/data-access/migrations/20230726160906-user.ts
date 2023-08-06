@@ -18,9 +18,6 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
       },
-      countryId: {
-        type: Sequelize.INTEGER,
-      },
       verifiedAt: {
         type: Sequelize.DATE,
       },
@@ -42,15 +39,6 @@ module.exports = {
       updatedAt: {
         type: Sequelize.DATE,
       },
-      permissionId: {
-        type: Sequelize.INTEGER,
-      },
-      roleId: {
-        type: Sequelize.INTEGER,
-      },
-      teamId: {
-        type: Sequelize.INTEGER,
-      },
       deletedAt: {
         type: Sequelize.DATE,
       },
@@ -64,15 +52,6 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-      },
-      permissionId: {
-        type: Sequelize.INTEGER,
-      },
-      roleId: {
-        type: Sequelize.INTEGER,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -94,19 +73,13 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
-      userId: {
-        type: Sequelize.INTEGER,
-      },
-      permissionId: {
-        type: Sequelize.INTEGER,
-      },
-      teamId: {
-        type: Sequelize.INTEGER,
-      },
       createdAt: {
         type: Sequelize.DATE,
       },
       updatedAt: {
+        type: Sequelize.DATE,
+      },
+      deletedAt: {
         type: Sequelize.DATE,
       },
     });
@@ -119,15 +92,6 @@ module.exports = {
       },
       ability: {
         type: Sequelize.STRING,
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-      },
-      roleId: {
-        type: Sequelize.INTEGER,
-      },
-      teamId: {
-        type: Sequelize.INTEGER,
       },
       createdAt: {
         type: Sequelize.DATE,

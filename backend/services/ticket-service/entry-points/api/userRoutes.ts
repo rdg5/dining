@@ -9,7 +9,7 @@ export default function defineUserRoutes(expressApp: express.Application) {
 
   router.get('/', async (req, res, next) => {
     try {
-      logger.info(`Order API was called to get all users from db`);
+      logger.info(`User API was called to get all users from db`);
       const response = await userUseCase.getUsers();
 
       if (!response) {
@@ -27,7 +27,7 @@ export default function defineUserRoutes(expressApp: express.Application) {
     const userId = Number(req.params.userId);
     try {
       logger.info(
-        `Order API was called to get one user with id ${req.params.userId} from db`
+        `User API was called to get one user with id ${req.params.userId} from db`
       );
       if (Number.isNaN(userId) || Number(userId) < 1) {
         res.status(400).send({ error: 'userId must be a valid number.' });
@@ -49,7 +49,7 @@ export default function defineUserRoutes(expressApp: express.Application) {
 
   router.post('/', async (req, res, next) => {
     try {
-      logger.info(`Order API was called to create a new user in the db`);
+      logger.info(`User API was called to create a new user in the db`);
       const response = await userUseCase.createNewUser(req.body);
 
       if (!response) {
@@ -69,7 +69,7 @@ export default function defineUserRoutes(expressApp: express.Application) {
     const userId = Number(req.params.userId);
     try {
       logger.info(
-        `Order API was called to edit user with id ${req.params.userId} from db`
+        `User API was called to edit user with id ${req.params.userId} from db`
       );
 
       if (Number.isNaN(userId) || Number(userId) < 1) {

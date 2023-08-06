@@ -17,6 +17,7 @@ export interface RoleModelFields
   name: string;
   createdAt: number;
   updatedAt: number;
+  deletedAt: number;
 }
 let roleModel;
 
@@ -41,6 +42,9 @@ export function getRoleModel() {
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },
