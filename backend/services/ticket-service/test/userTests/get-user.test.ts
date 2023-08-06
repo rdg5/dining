@@ -40,7 +40,7 @@ afterAll(async () => {
   stopWebServer();
 });
 
-describe('/api', () => {
+describe('/api/roles', () => {
   describe('GET /users', () => {
     test('When asked for existing users, Then should retrieve and receive 200 response along with existing fields', async () => {
       const getResponse = await axiosAPIClient.get(`/api/users`);
