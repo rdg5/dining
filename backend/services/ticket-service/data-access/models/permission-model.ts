@@ -16,6 +16,7 @@ export interface PermissionModelFields
   ability: string;
   createdAt: number;
   updatedAt: number;
+  deletedAt: number;
 }
 
 let permissionModel;
@@ -38,9 +39,15 @@ export function getPermissionModel() {
         updatedAt: {
           type: DataTypes.DATE,
         },
+        deletedAt: {
+          type: DataTypes.DATE,
+        },
       },
-      { freezeTableName: true }
+      { freezeTableName: true, paranoid: true }
     );
   }
+
+  // eslint-disable-next-line no-console
+  console.log('Role model defined!');
   return permissionModel;
 }

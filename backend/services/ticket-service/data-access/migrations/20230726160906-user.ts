@@ -59,6 +59,9 @@ module.exports = {
       updatedAt: {
         type: Sequelize.DATE,
       },
+      deletedAt: {
+        type: Sequelize.DATE,
+      },
     });
 
     await queryInterface.createTable('Role', {
@@ -102,6 +105,9 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,
+      },
+      deletedAt: {
+        type: Sequelize.DATE,
       },
     });
   },

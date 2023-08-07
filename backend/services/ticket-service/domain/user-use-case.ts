@@ -31,7 +31,7 @@ export async function createNewUser(requestBody) {
 }
 
 export async function editExistingUser(userId: number, requestBody) {
-  assertEditingDataIsValid(requestBody);
+  assertEditingUserIsValid(requestBody);
   await assertEmailAndUsernameAreUnique(requestBody, userId);
   return await userRepository.updateExistingUserById(userId, requestBody);
 }
@@ -90,7 +90,7 @@ function assertUserIsValid(userToBeCreated: addUserDTO) {
   }
 }
 
-function assertEditingDataIsValid(userToBeEdited: editUserDTO) {
+function assertEditingUserIsValid(userToBeEdited: editUserDTO) {
   const isValid = ajv.validate(editUserSchema, userToBeEdited);
   if (isValid === false) {
     throw new AppError('invalid-user-editing', `Validation failed`, 400, true);

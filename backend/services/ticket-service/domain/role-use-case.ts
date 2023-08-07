@@ -27,7 +27,7 @@ export async function createNewRole(requestBody) {
 }
 
 export async function editExistingRole(roleId: number, requestBody) {
-  assertEditingDataIsValid(requestBody);
+  assertEditingRoleIsValid(requestBody);
   await assertRoleToBeCreatedorEditedIsUnique(requestBody, roleId);
   return await roleRepository.updateExistingRoleById(roleId, requestBody);
 }
@@ -38,7 +38,7 @@ export async function deleteRoleById(roleId: number) {
     roleExistsforDeletion.role += `-${uuidv4()}`;
     await roleRepository.updateExistingRoleByRoleName(roleExistsforDeletion);
   }
-  await roleRepository.default(roleId);
+  await roleRepository.deleteExistingRole(roleId);
   return roleExistsforDeletion;
 }
 
@@ -61,7 +61,7 @@ function assertRoleIsValid(roleToBeCreated: addRoleDTO) {
   }
 }
 
-function assertEditingDataIsValid(roleToBeEdited: editRoleDTO) {
+function assertEditingRoleIsValid(roleToBeEdited: editRoleDTO) {
   const isValid = ajv.validate(editRoleSchema, roleToBeEdited);
   if (isValid === false) {
     throw new AppError('invalid-role-editing', `Validation failed`, 400, true);

@@ -16,6 +16,7 @@ export interface TeamModelFields
   name: string;
   createdAt: number;
   updatedAt: number;
+  deletedAt: number;
 }
 
 let teamModel;
@@ -36,6 +37,9 @@ export function getTeamModel() {
           type: DataTypes.DATE,
         },
         updatedAt: {
+          type: DataTypes.DATE,
+        },
+        deletedAt: {
           type: DataTypes.DATE,
         },
       },

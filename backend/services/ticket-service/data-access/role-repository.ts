@@ -99,7 +99,7 @@ export async function updateExistingRoleByRoleName(
   }
 }
 
-export default async function deleteExistingRole(
+export async function deleteExistingRole(
   roleId: number
 ): Promise<RoleRecord | null> {
   try {

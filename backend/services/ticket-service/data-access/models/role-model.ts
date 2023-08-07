@@ -48,7 +48,7 @@ export function getRoleModel() {
           type: DataTypes.DATE,
         },
       },
-      { freezeTableName: true }
+      { freezeTableName: true, paranoid: true }
     );
 
     // eslint-disable-next-line no-console
