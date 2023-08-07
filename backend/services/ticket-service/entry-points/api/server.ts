@@ -26,18 +26,18 @@ async function startWebServer(): Promise<AddressInfo> {
     },
     true
   );
-  await getDbConnection(); // Add this line
+  await getDbConnection();
 
   const expressApp = express();
   expressApp.use(addRequestIdExpressMiddleware);
   expressApp.use(helmet());
   expressApp.use(express.urlencoded({ extended: true }));
   expressApp.use(express.json());
-  expressApp.use(
-    jwtVerifierMiddleware({
-      secret: configurationProvider.getValue('jwtTokenSecret'),
-    })
-  );
+  // expressApp.use(
+  //   jwtVerifierMiddleware({
+  //     secret: configurationProvider.getValue('jwtTokenSecret'),
+  //   })
+  // );
   defineUserRoutes(expressApp);
   defineRoleRoutes(expressApp);
   defineTeamRoutes(expressApp);

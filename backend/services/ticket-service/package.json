@@ -1,7 +1,7 @@
 {
   "name": "ticket-service",
   "version": "0.0.6",
-  "description": "An example Node.js app that is packed with best practices",
+  "description": "A great ticketing application",
   "main": "./.dist/start.js",
   "scripts": {
     "start": "PORT=3000 PRETTY_PRINT=false node .dist/start.js",

@@ -9,6 +9,8 @@ export const jwtVerifierMiddleware = (options: JWTOptions) => {
   // 🔒 TODO - Once your project is off a POC stage, change your JWT flow to async using JWKS
   // Read more here: https://www.npmjs.com/package/jwks-rsa
   const middleware = (req, res, next) => {
+    // eslint-disable-next-line no-console
+    console.log(req);
     const authenticationHeader =
       req.headers.authorization || req.headers.Authorization;
 
