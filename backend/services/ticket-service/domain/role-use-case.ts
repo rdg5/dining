@@ -9,7 +9,7 @@ import {
   editRoleDTO,
   editRoleSchema,
   roleSchema,
-} from './role-schema';
+} from './Schemas/role-schema';
 
 export async function getRoles() {
   return await roleRepository.getAllRoles();

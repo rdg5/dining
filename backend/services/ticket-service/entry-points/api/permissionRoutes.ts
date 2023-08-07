@@ -2,7 +2,7 @@ import express from 'express';
 import { logger } from '@practica/logger';
 import { AppError } from '@practica/error-handling';
 import * as permissionUseCase from '../../domain/permission-use-case';
-import { RequestWithPermissionId } from './permissionInterfaces';
+import { RequestWithPermissionId } from './Interfaces/permissionInterfaces';
 
 export default function definePermissionRoutes(
   expressApp: express.Application

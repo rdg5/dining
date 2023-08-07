@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import { Op } from 'sequelize';
 import { getPermissionModel } from './models/permission-model';
 
 type PermissionRecord = {

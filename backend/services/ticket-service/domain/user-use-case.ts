@@ -9,7 +9,7 @@ import {
   editUserDTO,
   editUserSchema,
   userSchema,
-} from './user-schema';
+} from './Schemas/user-schema';
 
 export async function getUsers() {
   return await userRepository.getAllUsers();

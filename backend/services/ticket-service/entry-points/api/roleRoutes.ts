@@ -2,7 +2,7 @@ import express from 'express';
 import { logger } from '@practica/logger';
 import { AppError } from '@practica/error-handling';
 import * as roleUseCase from '../../domain/role-use-case';
-import { RequestWithRoleId } from './roleInterfaces';
+import { RequestWithRoleId } from './Interfaces/roleInterfaces';
 
 export default function defineRoleRoutes(expressApp: express.Application) {
   const router = express.Router();

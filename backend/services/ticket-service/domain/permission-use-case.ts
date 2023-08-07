@@ -9,7 +9,7 @@ import {
   editPermissionDTO,
   editPermissionSchema,
   permissionSchema,
-} from './permission-schema';
+} from './Schemas/permission-schema';
 
 export async function getAllpermissions() {
   return await permissionRepository.getAllPermissions();

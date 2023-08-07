@@ -2,7 +2,7 @@ import express from 'express';
 import { logger } from '@practica/logger';
 import { AppError } from '@practica/error-handling';
 import * as userUseCase from '../../domain/user-use-case';
-import { RequestWithUserId } from './userInterfaces';
+import { RequestWithUserId } from './Interfaces/userInterfaces';
 
 export default function defineUserRoutes(expressApp: express.Application) {
   const router = express.Router();
