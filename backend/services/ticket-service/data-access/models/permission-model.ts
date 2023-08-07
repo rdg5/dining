@@ -48,6 +48,6 @@ export function getPermissionModel() {
   }
 
   // eslint-disable-next-line no-console
-  console.log('Role model defined!');
+  console.log('Permission model defined!');
   return permissionModel;
 }

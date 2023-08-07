@@ -1,10 +1,11 @@
 import { Static, Type } from '@sinclair/typebox';
 import ajv from '@practica/validation';
 
+// TODO: Add regular password check
 export const userSchema = Type.Object({
-  username: Type.String({ minLength: 1 }),
+  username: Type.String({ minLength: 4 }),
   email: Type.RegEx(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/),
-  password: Type.String({ minLength: 1 }),
+  password: Type.String({ minLength: 8 }),
 });
 
 export const editUserSchema = Type.Object(

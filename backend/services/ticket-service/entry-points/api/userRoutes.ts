@@ -56,7 +56,7 @@ export default function defineUserRoutes(expressApp: express.Application) {
         res.status(404).end();
         return;
       }
-      res.status(201).json(response);
+      res.status(201).json({ status: 'ok' });
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.HTTPStatus).json({ error: error.message });

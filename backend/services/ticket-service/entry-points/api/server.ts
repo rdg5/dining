@@ -13,6 +13,7 @@ import getDbConnection from '../../data-access/models/db-connection';
 import defineRoleRoutes from './roleRoutes';
 import defineTeamRoutes from './teamRoutes';
 import definePermissionRoutes from './permissionRoutes';
+import defineAuthRoutes from './authRoutes';
 
 let connection: Server;
 
@@ -39,6 +40,7 @@ async function startWebServer(): Promise<AddressInfo> {
   //   })
   // );
   defineUserRoutes(expressApp);
+  defineAuthRoutes(expressApp);
   defineRoleRoutes(expressApp);
   defineTeamRoutes(expressApp);
   definePermissionRoutes(expressApp);
