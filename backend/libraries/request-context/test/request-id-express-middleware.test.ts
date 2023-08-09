@@ -34,7 +34,7 @@ describe('Request ID express middleware', () => {
         currentServer.close((error) => (error ? reject(error) : resolve()));
       });
 
-      currentServer = undefined;
+      // currentServer = undefined;
     }
   });
 

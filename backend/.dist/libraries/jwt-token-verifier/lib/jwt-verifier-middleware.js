@@ -14,7 +14,6 @@ const jwtVerifierMiddleware = (options) => {
         // eslint-disable-next-line no-console
         if (WHITELISTED_ENDPOINTS.includes(req.url)) {
             next();
-            return;
         }
         const authenticationHeader = req.headers.authorization || req.headers.Authorization;
         if (!authenticationHeader) {
@@ -31,6 +30,8 @@ const jwtVerifierMiddleware = (options) => {
         else {
             token = authenticationHeader;
         }
+        // eslint-disable-next-line no-console
+        console.log('THIS HAS HAPPENED HERE!!!!!!');
         jsonwebtoken_1.default.verify(token, options.secret, 
         // TODO: we should remove this any according to the library, jwtContent can not contain data property
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,16 +1,23 @@
 /* eslint-disable consistent-return */
 import jwt, { VerifyErrors } from 'jsonwebtoken';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { logger } from '@practica/logger';
 
 export type JWTOptions = {
   secret: string;
 };
+
+const WHITELISTED_ENDPOINTS: string[] = ['/auth/login', '/auth/register'];
 
 export const jwtVerifierMiddleware = (options: JWTOptions) => {
   // 🔒 TODO - Once your project is off a POC stage, change your JWT flow to async using JWKS
   // Read more here: https://www.npmjs.com/package/jwks-rsa
   const middleware = (req, res, next) => {
     // eslint-disable-next-line no-console
-    console.log(req);
+    if (WHITELISTED_ENDPOINTS.includes(req.url)) {
+      next();
+      return;
+    }
     const authenticationHeader =
       req.headers.authorization || req.headers.Authorization;
 
@@ -20,10 +27,8 @@ export const jwtVerifierMiddleware = (options: JWTOptions) => {
 
     let token: string;
 
-    // A token comes in one of two forms: 'token' or 'Bearer token'
     const authHeaderParts = authenticationHeader.split(' ');
     if (authHeaderParts.length > 2) {
-      // It should have 1 or 2 parts (separated by space), the incoming string has unknown structure
       return res.sendStatus(401);
     }
     if (authHeaderParts.length === 2) {
