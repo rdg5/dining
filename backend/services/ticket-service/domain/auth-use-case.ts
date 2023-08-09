@@ -1,10 +1,13 @@
 /* eslint-disable no-console */
 import ajv from '@practica/validation/ajv-cache';
 import bcrypt from 'bcrypt';
+import * as configurationProvider from '@practica/configuration-provider';
 import { AppError } from '@practica/error-handling';
+import jwt from 'jsonwebtoken';
 import { addUserDTO, userSchema } from './Schemas/user-schema';
 import * as userRepository from '../data-access/user-repository';
 import * as authRepository from '../data-access/auth-repository';
+import { LoginUserDTO, loginSchema } from './Schemas/login-schema';
 
 export async function register(requestBody) {
   assertUserIsValid(requestBody);
@@ -13,12 +16,26 @@ export async function register(requestBody) {
   return await authRepository.saveNewUser(requestBody);
 }
 
+export async function login(requestBody) {
+  assertLoginIsValid(requestBody);
+  return await assertLoginIsSuccessful(requestBody);
+}
+
 function assertUserIsValid(userToBeCreated: addUserDTO) {
   const isValid = ajv.validate(userSchema, userToBeCreated);
   if (isValid === false && ajv.errors) {
     const errorMessage = getCustomErrorMessage(ajv.errors);
 
     throw new AppError('invalid-user-registering', errorMessage, 400, true);
+  }
+}
+
+function assertLoginIsValid(userToLogin: LoginUserDTO) {
+  const isValid = ajv.validate(loginSchema, userToLogin);
+  if (isValid === false && ajv.errors) {
+    const errorMessage = getCustomErrorMessage(ajv.errors);
+
+    throw new AppError('invalid-user-login', errorMessage, 400, true);
   }
 }
 
@@ -80,4 +97,38 @@ function getCustomErrorMessage(errors): string {
     }
   }
   return errorMessage;
+}
+async function assertLoginIsSuccessful(requestBody) {
+  const { email, password } = requestBody;
+  try {
+    const foundUser = await authRepository.getUserByUsername(email);
+
+    if (!foundUser) {
+      throw new Error('Invalid email or password');
+    }
+
+    const match = await bcrypt.compare(password, foundUser.password);
+
+    if (!match) {
+      throw new Error('Invalid email or password');
+    }
+
+    const expiryTime = Math.floor(Date.now() / 1000) + 60 * 60;
+    const token = jwt.sign(
+      {
+        exp: expiryTime,
+        id: foundUser.id,
+      },
+      configurationProvider.getValue('jwtTokenSecret')
+    );
+
+    return { token, expiryTime };
+  } catch (error) {
+    throw new AppError(
+      'authentication-error',
+      'Authentication failed',
+      400,
+      true
+    );
+  }
 }

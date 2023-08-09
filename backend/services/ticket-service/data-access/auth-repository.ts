@@ -31,3 +31,15 @@ export async function saveNewUser(
     throw error;
   }
 }
+
+export async function getUserByUsername(
+  email: string
+): Promise<UserRecord | null> {
+  try {
+    const foundUser = await getUserModel().findOne({ where: { email } });
+    return foundUser;
+  } catch (error) {
+    console.error('Error in saveNewUser:', error);
+    throw error;
+  }
+}
