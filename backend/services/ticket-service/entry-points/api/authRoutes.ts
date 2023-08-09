@@ -33,7 +33,54 @@ export default function defineUserRoutes(expressApp: express.Application) {
         res.status(404).end();
         return;
       }
-      res.status(201).json({ status: 'ok', token: response });
+      res.cookie('accessToken', response.jwtToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 1000 * 60 * 20,
+      });
+
+      res.cookie('refreshToken', response.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+      });
+
+      res.status(200).json({ status: 'ok' });
+    } catch (error) {
+      if (error instanceof AppError) {
+        res.status(error.HTTPStatus).json({ error: error.message });
+        next(error);
+      }
+    }
+  });
+
+  router.post('/refresh', async (req, res, next) => {
+    const { accessToken, refreshToken } = req.cookies;
+    try {
+      logger.info(`Auth API was called to refresh an expired token`);
+      const response = authUseCase.refreshTokenGenerator(
+        accessToken,
+        refreshToken
+      );
+
+      if (!response) {
+        res.status(404).end();
+        return;
+      }
+
+      res.cookie('accessToken', response.newAccessToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 1000 * 60 * 20,
+      });
+
+      res.cookie('refreshToken', response.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+      });
+
+      res.status(200).json({ status: 'ok' });
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.HTTPStatus).json({ error: error.message });

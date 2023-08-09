@@ -3,7 +3,7 @@ import ajv from '@practica/validation/ajv-cache';
 import bcrypt from 'bcrypt';
 import * as configurationProvider from '@practica/configuration-provider';
 import { AppError } from '@practica/error-handling';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { addUserDTO, userSchema } from './Schemas/user-schema';
 import * as userRepository from '../data-access/user-repository';
 import * as authRepository from '../data-access/auth-repository';
@@ -19,6 +19,12 @@ export async function register(requestBody) {
 export async function login(requestBody) {
   assertLoginIsValid(requestBody);
   return await assertLoginIsSuccessful(requestBody);
+}
+
+export function refreshTokenGenerator(jwtToken: string, refreshToken) {
+  const validTokens = assertThatTokensAreValid(jwtToken, refreshToken);
+  const newAccessToken = generateNewToken(validTokens);
+  return { newAccessToken, refreshToken };
 }
 
 function assertUserIsValid(userToBeCreated: addUserDTO) {
@@ -79,7 +85,6 @@ function getCustomErrorMessage(errors): string {
 
   // eslint-disable-next-line no-restricted-syntax
   for (const error of errors) {
-    console.log(error);
     switch (error.keyword) {
       case 'minLength':
         // eslint-disable-next-line no-case-declarations
@@ -113,16 +118,27 @@ async function assertLoginIsSuccessful(requestBody) {
       throw new Error('Invalid email or password');
     }
 
-    const expiryTime = Math.floor(Date.now() / 1000) + 60 * 60;
-    const token = jwt.sign(
+    const expiryTimeForJwt = Math.floor(Date.now() / 1000) + 60 * 20;
+    const jwtToken = jwt.sign(
       {
-        exp: expiryTime,
+        exp: expiryTimeForJwt,
         id: foundUser.id,
+        role: foundUser.Roles[0].role,
       },
       configurationProvider.getValue('jwtTokenSecret')
     );
 
-    return { token, expiryTime };
+    const expiryTimeForRefreshToken =
+      Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60;
+    const refreshToken = jwt.sign(
+      {
+        exp: expiryTimeForRefreshToken,
+        id: foundUser.id,
+      },
+      configurationProvider.getValue('refreshTokenSecret')
+    );
+
+    return { jwtToken, expiryTimeForJwt, refreshToken };
   } catch (error) {
     throw new AppError(
       'authentication-error',
@@ -131,4 +147,40 @@ async function assertLoginIsSuccessful(requestBody) {
       true
     );
   }
+}
+
+function assertThatTokensAreValid(jwtToken: string, refreshToken: string) {
+  const accessTokenPayload = jwt.verify(
+    jwtToken,
+    configurationProvider.getValue('jwtTokenSecret')
+  ) as JwtPayload;
+  if (!accessTokenPayload) {
+    throw new AppError('verification-error', 'Invalid token', 400, true);
+  }
+  const { role, id } = accessTokenPayload;
+  const refresHTokenPayload = jwt.verify(
+    refreshToken,
+    configurationProvider.getValue('refreshTokenSecret')
+  ) as JwtPayload;
+  if (!refresHTokenPayload) {
+    throw new AppError(
+      'verification-error',
+      'Invalid refresh token',
+      400,
+      true
+    );
+  }
+
+  return { role, id };
+}
+
+function generateNewToken(validTokenPayload: JwtPayload) {
+  return jwt.sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 60 * 20,
+      id: validTokenPayload.id,
+      role: validTokenPayload.role,
+    },
+    configurationProvider.getValue('jwtTokenSecret')
+  );
 }

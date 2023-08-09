@@ -7,6 +7,7 @@ import { errorHandler } from '@practica/error-handling';
 import * as configurationProvider from '@practica/configuration-provider';
 import { jwtVerifierMiddleware } from '@practica/jwt-token-verifier';
 import { addRequestIdExpressMiddleware } from '@practica/request-context';
+import cookieParser from 'cookie-parser';
 import configurationSchema from '../../config';
 import defineUserRoutes from './userRoutes';
 import getDbConnection from '../../data-access/models/db-connection';
@@ -30,6 +31,7 @@ async function startWebServer(): Promise<AddressInfo> {
   await getDbConnection();
 
   const expressApp = express();
+  expressApp.use(cookieParser());
   expressApp.use(addRequestIdExpressMiddleware);
   expressApp.use(helmet());
   expressApp.use(express.urlencoded({ extended: true }));

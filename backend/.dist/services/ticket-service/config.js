@@ -8,6 +8,13 @@ exports.default = {
         nullable: false,
         env: 'JWT_TOKEN_SECRET',
     },
+    refreshTokenSecret: {
+        doc: 'The refresh token signing algorithm secret',
+        format: 'String',
+        default: 'asdzxc123',
+        nullable: false,
+        env: 'REFRESH_TOKEN_SECRET',
+    },
     port: {
         doc: 'The API listening port. By default is 0 (ephemeral) which serves as a dynamic port for testing purposes. For production use, a specific port must be assigned',
         format: 'Number',

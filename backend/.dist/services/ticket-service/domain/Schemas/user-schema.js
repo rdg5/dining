@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.editUserValidator = exports.addUserValidator = exports.editUserSchema = exports.userSchema = void 0;
 const typebox_1 = require("@sinclair/typebox");
 const validation_1 = __importDefault(require("@practica/validation"));
-// TODO: Add regular password check
 exports.userSchema = typebox_1.Type.Object({
     username: typebox_1.Type.String({ minLength: 4 }),
     email: typebox_1.Type.RegEx(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/),

@@ -52,12 +52,29 @@ function defineUserRoutes(expressApp) {
     router.post('/login', async (req, res, next) => {
         try {
             logger_1.logger.info(`Auth API was called to login a user`);
-            const response = await authUseCase.register(req.body);
+            const response = await authUseCase.login(req.body);
             if (!response) {
                 res.status(404).end();
                 return;
             }
-            res.status(201).json({ status: 'ok' });
+            res.status(201).json({ status: 'ok', token: response });
+        }
+        catch (error) {
+            if (error instanceof error_handling_1.AppError) {
+                res.status(error.HTTPStatus).json({ error: error.message });
+                next(error);
+            }
+        }
+    });
+    router.post('/refresh', async (req, res, next) => {
+        try {
+            logger_1.logger.info(`Auth API was called to refresh an expired token`);
+            const response = authUseCase.refreshTokenGenerator(req.body, req.headers.authorization);
+            if (!response) {
+                res.status(404).end();
+                return;
+            }
+            res.status(201).json({ status: 'ok', token: response });
         }
         catch (error) {
             if (error instanceof error_handling_1.AppError) {

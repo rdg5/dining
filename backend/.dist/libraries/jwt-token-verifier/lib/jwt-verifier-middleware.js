@@ -6,7 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.jwtVerifierMiddleware = void 0;
 /* eslint-disable consistent-return */
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const WHITELISTED_ENDPOINTS = ['/auth/login', '/auth/register'];
+const WHITELISTED_ENDPOINTS = [
+    '/auth/login',
+    '/auth/register, /auth/refresh',
+];
 const jwtVerifierMiddleware = (options) => {
     // 🔒 TODO - Once your project is off a POC stage, change your JWT flow to async using JWKS
     // Read more here: https://www.npmjs.com/package/jwks-rsa
@@ -14,6 +17,7 @@ const jwtVerifierMiddleware = (options) => {
         // eslint-disable-next-line no-console
         if (WHITELISTED_ENDPOINTS.includes(req.url)) {
             next();
+            return;
         }
         const authenticationHeader = req.headers.authorization || req.headers.Authorization;
         if (!authenticationHeader) {
@@ -30,8 +34,6 @@ const jwtVerifierMiddleware = (options) => {
         else {
             token = authenticationHeader;
         }
-        // eslint-disable-next-line no-console
-        console.log('THIS HAS HAPPENED HERE!!!!!!');
         jsonwebtoken_1.default.verify(token, options.secret, 
         // TODO: we should remove this any according to the library, jwtContent can not contain data property
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

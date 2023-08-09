@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import { Op } from 'sequelize';
 import { getUserModel } from './models/user-model';
+import { RoleModelFields, getRoleModel } from './models/role-model';
 
 type UserRecord = {
   id: number;
@@ -17,6 +17,13 @@ type UserRecord = {
   deletedAt: number;
 };
 
+type LoginRecord = {
+  id: number;
+  email: string;
+  password: string;
+  Roles: RoleModelFields[];
+};
+
 export async function saveNewUser(
   newUserData: Omit<UserRecord, 'id'>
 ): Promise<UserRecord | null> {
@@ -25,6 +32,12 @@ export async function saveNewUser(
       attributes: ['id', 'username', 'email'],
       raw: true,
     });
+    const memberRole = await getRoleModel().findOne({
+      where: { role: 'Member' },
+    });
+    if (memberRole) {
+      await addedUser.setRoles(memberRole);
+    }
     return addedUser;
   } catch (error) {
     console.error('Error in saveNewUser:', error);
@@ -34,12 +47,15 @@ export async function saveNewUser(
 
 export async function getUserByUsername(
   email: string
-): Promise<UserRecord | null> {
+): Promise<LoginRecord | null> {
   try {
-    const foundUser = await getUserModel().findOne({ where: { email } });
+    const foundUser = await getUserModel().findOne({
+      where: { email },
+      include: [getRoleModel()],
+    });
     return foundUser;
   } catch (error) {
-    console.error('Error in saveNewUser:', error);
+    console.error('Error in getUserByUserName:', error);
     throw error;
   }
 }
