@@ -8,6 +8,7 @@ import * as configurationProvider from '@practica/configuration-provider';
 import { jwtVerifierMiddleware } from '@practica/jwt-token-verifier';
 import { addRequestIdExpressMiddleware } from '@practica/request-context';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import configurationSchema from '../../config';
 import defineUserRoutes from './userRoutes';
 import getDbConnection from '../../data-access/models/db-connection';
@@ -32,6 +33,7 @@ async function startWebServer(): Promise<AddressInfo> {
 
   const expressApp = express();
   expressApp.use(cookieParser());
+  expressApp.use(cors());
   expressApp.use(addRequestIdExpressMiddleware);
   expressApp.use(helmet());
   expressApp.use(express.urlencoded({ extended: true }));
