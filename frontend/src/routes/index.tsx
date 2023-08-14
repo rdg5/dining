@@ -6,12 +6,7 @@ export default component$(() => {
   return (
     <>
 		<NavBar />
-      <h1>Hi 👋</h1>
-      <p>
-        Can't wait to see what you build with qwik!
-        <br />
-        Happy coding.
-      </p>
+      <h1>Homepage</h1>
     </>
   );
 });

@@ -28,7 +28,7 @@ label {
   background-color: gainsboro;
 }
 
-.registerInput {
+.loginInput {
   width: 90%;
   margin: 10px 0;
   padding: 10px 10px 10px 45px;
@@ -36,7 +36,7 @@ label {
   background-color: white;
 }
 
-.registerButton {
+.loginButton {
   width: 8rem;
   height: 3rem;
 	justify-self: center;
@@ -50,7 +50,7 @@ label {
   font-size: small;
 }
 
-.registerTitle {
+.loginTitle {
   color: #f75a0b;
   font-size: xx-large;
 }
@@ -60,17 +60,17 @@ button:hover {
 }
 
 @media (max-width: 768px) { 
-  .registerInput {
+  .loginInput {
     width: 95%;
     padding: 8px; 
   }
 
-  .register-button {
+  .login-button {
     width: auto;
     padding: 10px 20px; 
   }
 
-	#registerTitle {
+	#loginTitle {
 		font-size: 1rem;
 	}
 } 

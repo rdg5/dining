@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Server } from 'http';
 import { logger } from '@practica/logger';
 import { AddressInfo } from 'net';
@@ -7,7 +8,7 @@ import { errorHandler } from '@practica/error-handling';
 import * as configurationProvider from '@practica/configuration-provider';
 import { jwtVerifierMiddleware } from '@practica/jwt-token-verifier';
 import { addRequestIdExpressMiddleware } from '@practica/request-context';
-import cookieParser from 'cookie-parser';
+import cookies from 'cookie-parser';
 import cors from 'cors';
 import configurationSchema from '../../config';
 import defineUserRoutes from './userRoutes';
@@ -32,12 +33,20 @@ async function startWebServer(): Promise<AddressInfo> {
   await getDbConnection();
 
   const expressApp = express();
-  expressApp.use(cookieParser());
-  expressApp.use(cors());
-  expressApp.use(addRequestIdExpressMiddleware);
-  expressApp.use(helmet());
-  expressApp.use(express.urlencoded({ extended: true }));
+  expressApp.use(
+    cors({
+      origin: 'http://localhost:5173',
+      credentials: true,
+    })
+  );
   expressApp.use(express.json());
+  expressApp.use(express.urlencoded({ extended: true }));
+  expressApp.use(cookies());
+  expressApp.use((req, res, next) => {
+    console.log(req.headers);
+    console.log(req.cookies);
+    next();
+  });
   expressApp.use(
     jwtVerifierMiddleware({
       secret: configurationProvider.getValue('jwtTokenSecret'),
@@ -48,6 +57,33 @@ async function startWebServer(): Promise<AddressInfo> {
   defineRoleRoutes(expressApp);
   defineTeamRoutes(expressApp);
   definePermissionRoutes(expressApp);
+  // defineUserRoutes(expressApp);
+  // defineRoleRoutes(expressApp);
+  // defineTeamRoutes(expressApp);
+  // definePermissionRoutes(expressApp);
+  // expressApp.use((req, res, next) => {
+  //   console.log(req.headers);
+  //   console.log(req.cookies);
+  //   next();
+  // });
+  // expressApp.use(
+  //   cors({
+  //     origin: 'http://localhost:5173',
+  //     credentials: true,
+  //   })
+  // );
+  expressApp.use(addRequestIdExpressMiddleware);
+  expressApp.use(helmet());
+  // expressApp.use(
+  //   jwtVerifierMiddleware({
+  //     secret: configurationProvider.getValue('jwtTokenSecret'),
+  //   })
+  // );
+  // defineUserRoutes(expressApp);
+  // defineAuthRoutes(expressApp);
+  // defineRoleRoutes(expressApp);
+  // defineTeamRoutes(expressApp);
+  // definePermissionRoutes(expressApp);
   defineErrorHandlingMiddleware(expressApp);
   const APIAddress = await openConnection(expressApp);
   return APIAddress;

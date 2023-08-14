@@ -4,6 +4,7 @@ import type { InitialValues, SubmitHandler} from "@modular-forms/qwik";
 import { useForm, zodForm$ } from "@modular-forms/qwik";
 import  CSS  from './index.css?inline'
 import apiFetch from "~/helper-functions/fetch";
+import NavBar from "~/components/nav-bar/nav-bar";
 
 
 
@@ -40,19 +41,20 @@ export default component$ (() => {
 
 	const handleSubmit = $<SubmitHandler<RegisterForm>>( async (values, event) => {
 		try {
-			await apiFetch('auth/register', {method:'Post', body:JSON.stringify(values)})
+			await apiFetch('/auth/register', {method:'Post', body:JSON.stringify(values)})
 			await login('/login')
 		}
 		catch (error: any) {
 			if(error && typeof error.message === 'string') {
 			errorMessage.value = error.message;
-			console.log(errorMessage.value)
 			}
 		}
   });
 
 
 	return(
+		<>
+		<NavBar />
 		<div class="page">
 			<h3 class="registerTitle">Register</h3>
 		<Form onSubmit$={handleSubmit} class="form">
@@ -83,9 +85,10 @@ export default component$ (() => {
     </div>
   )}
   </Field>
-  <button type="submit" class="register-button">Register</button>
+  <button type="submit" class="registerButton">Register</button>
 	<p class="message">{errorMessage.value}</p>
 		</Form>
 	</div>
+	</>
 	)
 })

@@ -5,7 +5,6 @@ interface FetchOptions extends RequestInit {
 }
 
 export default async function apiFetch(endpoint: string, options: FetchOptions = {}) {
-console.log(import.meta.env.PUBLIC_API_URL + endpoint);
 
 	const defaultHeaders = {
 			"Content-Type": "application/json",
@@ -17,11 +16,12 @@ console.log(import.meta.env.PUBLIC_API_URL + endpoint);
 					...defaultHeaders,
 					...options.headers,
 			},
+			credentials: 'include'
 			
 	});
 	const data = await response.json();
 
-	if (response.status !== 201) {
+	if (!response.ok) {
 			throw new Error(data.error);
 	}
 

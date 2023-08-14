@@ -12,10 +12,22 @@ export default defineConfig(() => {
       qwikVite(),
       tsconfigPaths(),
     ],
+		// server: {
+		// 	proxy: {
+		// 	'/api': {
+		// 	target: 'http://localhost:3000/',
+		// 	changeOrigin: true,
+		// 	cookiePathRewrite: {
+		// 		"*": "/",
+		// 	}
+		// 	}
+		// 	}
+		// 	},
     preview: {
       headers: {
         "Cache-Control": "public, max-age=600",
       },
+			
     },
   };
 });

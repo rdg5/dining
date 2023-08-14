@@ -8,6 +8,7 @@ export default function defineUserRoutes(expressApp: express.Application) {
   const router = express.Router();
 
   router.get('/', async (req, res, next) => {
+    // eslint-disable-next-line no-console
     try {
       logger.info(`User API was called to get all users from db`);
       const response = await userUseCase.getUsers();
@@ -16,7 +17,7 @@ export default function defineUserRoutes(expressApp: express.Application) {
         res.status(404).end();
         return;
       }
-
+      res.setHeader('Content-type', 'application/json');
       res.json(response);
     } catch (error) {
       next(error);

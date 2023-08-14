@@ -35,16 +35,19 @@ export default function defineUserRoutes(expressApp: express.Application) {
       }
       res.cookie('accessToken', response.jwtToken, {
         httpOnly: true,
-        secure: true,
+        path: '/',
         maxAge: 1000 * 60 * 20,
       });
 
       res.cookie('refreshToken', response.refreshToken, {
         httpOnly: true,
-        secure: true,
+        path: '/',
         maxAge: 1000 * 60 * 60 * 24 * 30,
       });
+      res.header('Access-Control-Allow-Credentials', 'true');
 
+      // eslint-disable-next-line no-console
+      await console.log(res);
       res.status(200).json({ status: 'ok' });
     } catch (error) {
       if (error instanceof AppError) {
@@ -79,7 +82,6 @@ export default function defineUserRoutes(expressApp: express.Application) {
         secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 30,
       });
-
       res.status(200).json({ status: 'ok' });
     } catch (error) {
       if (error instanceof AppError) {
