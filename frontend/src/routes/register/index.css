@@ -1,14 +1,14 @@
 .form {
 	display: grid;
   width: 40%;
+  margin: 0 auto;
+  padding: 2rem 3rem;
   min-width: 250px;
 	max-width: 800px;
+	border: 0.5px solid grey;
   background-color: white;
-  padding: 2rem 3rem;
 	font-size: small;
 	color:#353232;
-  margin: 0 auto;
-	border: 0.5px solid grey;
 }
 
 label {
@@ -19,38 +19,42 @@ label {
 }
 
 .page {
-  background-color: gainsboro;
   display: flex;
+  min-height: 120vh;
+  margin-top: -5rem;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 120vh;
-  margin-top: -5rem;
+  background-color: gainsboro;
 }
 
- .registerInput {
+.registerInput {
   width: 90%;
-  background-color: white;
   margin: 10px 0;
   padding: 10px 10px 10px 45px;
 	border-bottom: 1px solid gray;
+  background-color: white;
 }
+
 .register-button {
-  color: white;
+  width: 8rem;
+  height: 3rem;
 	justify-self: center;
-  background-color: #ffa700;
   border-radius: 45px;
   border: none;
-  width: 8rem;
+  color: white;
+  background-color: #ffa700;
+  font-size: small;
   transition: 0.3s ease;
   cursor: pointer;
   font-size: small;
-  height: 3rem;
 }
-#registerTitle {
-  font-size: xx-large;
+
+.registerTitle {
   color: #f75a0b;
+  font-size: xx-large;
 }
+
 button:hover {
   background-color: #b84207;
 }
@@ -72,5 +76,10 @@ button:hover {
 } 
 
 .error {
-	color:#f75a0b
+	color:#f75a0b;
+}
+
+.message { 
+	justify-self: center;
+	color:#f75a0b;
 }

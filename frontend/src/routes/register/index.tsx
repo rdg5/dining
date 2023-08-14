@@ -1,8 +1,11 @@
-import { $, component$, useStylesScoped$ } from "@builder.io/qwik";
-import { routeLoader$, z } from "@builder.io/qwik-city";
+import { $, component$, useStylesScoped$, useSignal } from "@builder.io/qwik";
+import { routeLoader$, useNavigate, z } from "@builder.io/qwik-city";
 import type { InitialValues, SubmitHandler} from "@modular-forms/qwik";
 import { useForm, zodForm$ } from "@modular-forms/qwik";
 import  CSS  from './index.css?inline'
+import apiFetch from "~/helper-functions/fetch";
+
+
 
 const RegisterSchema = z.object({
 	username: z
@@ -26,35 +29,38 @@ export const useFormLoader = routeLoader$<InitialValues<RegisterForm>>(() => ({
   password: '',
 }));
 
-
-
 export default component$ (() => {
 		useStylesScoped$(CSS);
-		const [RegisterForm, { Form, Field, FieldArray }] = useForm<RegisterForm>({
+		const login = useNavigate();
+		const errorMessage = useSignal('');
+		const [RegisterForm, { Form, Field }] = useForm<RegisterForm>({
 			loader: useFormLoader(),
       validate: zodForm$(RegisterSchema),
 	})
+
 	const handleSubmit = $<SubmitHandler<RegisterForm>>( async (values, event) => {
-		const response = await fetch("http://localhost:3000/auth/register", {
-			method: 'post',
-			headers: {
-				"content-type": "application/json"
-			},
-			body: JSON.stringify(values)
-		})
-		console.log(response)
+		try {
+			await apiFetch('auth/register', {method:'Post', body:JSON.stringify(values)})
+			await login('/login')
+		}
+		catch (error: any) {
+			if(error && typeof error.message === 'string') {
+			errorMessage.value = error.message;
+			console.log(errorMessage.value)
+			}
+		}
   });
 
 
 	return(
 		<div class="page">
-			<h3 id="registerTitle">Register</h3>
+			<h3 class="registerTitle">Register</h3>
 		<Form onSubmit$={handleSubmit} class="form">
 		<label for="username">username</label>
 		<Field name="username">
 		{(field, props) => (
     <div>
-      <input {...props} type="username" id="username" class="registerInput" placeholder="Gandalf" value={field.value} />
+      <input {...props} type="text" id="username" class="registerInput" placeholder="Gandalf" value={field.value} />
       {field.error && <div class="error">{field.error}</div>}
     </div>
   )}
@@ -78,6 +84,7 @@ export default component$ (() => {
   )}
   </Field>
   <button type="submit" class="register-button">Register</button>
+	<p class="message">{errorMessage.value}</p>
 		</Form>
 	</div>
 	)
