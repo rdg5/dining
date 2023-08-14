@@ -1,0 +1,76 @@
+.form {
+	display: grid;
+  width: 40%;
+  min-width: 250px;
+	max-width: 800px;
+  background-color: white;
+  padding: 2rem 3rem;
+	font-size: small;
+	color:#353232;
+  margin: 0 auto;
+	border: 0.5px solid grey;
+}
+
+label {
+  display: block;
+  width: 100%;
+  text-align: left;
+	font-weight: bolder;
+}
+
+.page {
+  background-color: gainsboro;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 120vh;
+  margin-top: -5rem;
+}
+
+ .registerInput {
+  width: 90%;
+  background-color: white;
+  margin: 10px 0;
+  padding: 10px 10px 10px 45px;
+	border-bottom: 1px solid gray;
+}
+.register-button {
+  color: white;
+	justify-self: center;
+  background-color: #ffa700;
+  border-radius: 45px;
+  border: none;
+  width: 8rem;
+  transition: 0.3s ease;
+  cursor: pointer;
+  font-size: small;
+  height: 3rem;
+}
+#registerTitle {
+  font-size: xx-large;
+  color: #f75a0b;
+}
+button:hover {
+  background-color: #b84207;
+}
+
+@media (max-width: 768px) { 
+  .registerInput {
+    width: 95%;
+    padding: 8px; 
+  }
+
+  .register-button {
+    width: auto;
+    padding: 10px 20px; 
+  }
+
+	#registerTitle {
+		font-size: 1rem;
+	}
+} 
+
+.error {
+	color:#f75a0b
+}
