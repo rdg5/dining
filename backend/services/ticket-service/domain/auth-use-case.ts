@@ -64,7 +64,7 @@ async function assertEmailAndUsernameAreUnique(
     if (existingUsername === username) {
       throw new AppError(
         'validation-failed',
-        `Username already in use`,
+        `The provided credentials are already in use or invalid`,
         409,
         true
       );
@@ -72,7 +72,7 @@ async function assertEmailAndUsernameAreUnique(
     if (existingEmail === email) {
       throw new AppError(
         'validation-failed',
-        `Email already in use`,
+        `The provided credentials are already in use or invalid`,
         409,
         true
       );
