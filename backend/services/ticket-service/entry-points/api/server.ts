@@ -57,33 +57,8 @@ async function startWebServer(): Promise<AddressInfo> {
   defineRoleRoutes(expressApp);
   defineTeamRoutes(expressApp);
   definePermissionRoutes(expressApp);
-  // defineUserRoutes(expressApp);
-  // defineRoleRoutes(expressApp);
-  // defineTeamRoutes(expressApp);
-  // definePermissionRoutes(expressApp);
-  // expressApp.use((req, res, next) => {
-  //   console.log(req.headers);
-  //   console.log(req.cookies);
-  //   next();
-  // });
-  // expressApp.use(
-  //   cors({
-  //     origin: 'http://localhost:5173',
-  //     credentials: true,
-  //   })
-  // );
   expressApp.use(addRequestIdExpressMiddleware);
   expressApp.use(helmet());
-  // expressApp.use(
-  //   jwtVerifierMiddleware({
-  //     secret: configurationProvider.getValue('jwtTokenSecret'),
-  //   })
-  // );
-  // defineUserRoutes(expressApp);
-  // defineAuthRoutes(expressApp);
-  // defineRoleRoutes(expressApp);
-  // defineTeamRoutes(expressApp);
-  // definePermissionRoutes(expressApp);
   defineErrorHandlingMiddleware(expressApp);
   const APIAddress = await openConnection(expressApp);
   return APIAddress;

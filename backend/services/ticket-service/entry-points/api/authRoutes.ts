@@ -44,10 +44,8 @@ export default function defineUserRoutes(expressApp: express.Application) {
         path: '/',
         maxAge: 1000 * 60 * 60 * 24 * 30,
       });
-      res.header('Access-Control-Allow-Credentials', 'true');
-
       // eslint-disable-next-line no-console
-      await console.log(res);
+      console.log(res);
       res.status(200).json({ status: 'ok' });
     } catch (error) {
       if (error instanceof AppError) {

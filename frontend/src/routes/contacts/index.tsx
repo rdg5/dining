@@ -11,8 +11,11 @@ export default component$(() => {
 			try {
 				const response = await axios.get("http://localhost:3000/api/users", {
 					withCredentials: true,
-				});
-				console.log(response.data)
+				// const response = await fetch("http://localhost:3000/api/users", {method: "get", })
+			})
+				console.log(response)
+				// });
+				// console.log(response.data)
 			}
 			catch (error) {
 				console.log(error);
