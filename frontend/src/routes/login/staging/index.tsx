@@ -7,52 +7,52 @@ import { UserSession, userSessionContext } from "~/root";
 import NavBar from "~/components/nav-bar/nav-bar";
 
 export default component$(() => {
-	const isProtectedOk = useSignal(false);
-	const navigate = useNavigate();
-	const userSession: UserSession = useContext(userSessionContext);
+  const isProtectedOk = useSignal(false);
+  const navigate = useNavigate();
+  const userSession: UserSession = useContext(userSessionContext);
 
 
-	useVisibleTask$(() => {
-		const timeout = setTimeout(async () => {
+  useVisibleTask$(() => {
+    const timeout = setTimeout(async () => {
      const {data, error} = await supabase.auth.getUser();
 
-			if(data?.user?.id && !error) {
-				isProtectedOk.value = true;
-				userSession.userId = data?.user?.id;
-				userSession.isLoggedIn = true;
-				// await navigate('/members/dashboard');
-			} else {
-				console.error(error);
-				userSession.userId = '';
-				userSession.isLoggedIn = false;
-				await navigate('/login')
-			}
-		},500)
+      if(data?.user?.id && !error) {
+        isProtectedOk.value = true;
+        userSession.userId = data?.user?.id;
+        userSession.isLoggedIn = true;
+        // await navigate('/members/dashboard');
+      } else {
+        console.error(error);
+        userSession.userId = '';
+        userSession.isLoggedIn = false;
+        await navigate('/login')
+      }
+    },500)
 
-		return (() => {
-			clearTimeout(timeout)
-		})
-	})
+    return (() => {
+      clearTimeout(timeout)
+    })
+  })
 
   return (
     <>
-		<NavBar />
+    <NavBar />
       <div>
-				{isProtectedOk &&(
+        {isProtectedOk &&(
           <>
             <span>Redirecting to </span>
             <Link href="/members/dashboard">
               <button>Dashboard</button>
             </Link>
           </>
-				)}
-				{!isProtectedOk &&(
-					<>
-					Please log in
-					</>
-				)
+        )}
+        {!isProtectedOk &&(
+          <>
+          Please log in
+          </>
+        )
 
-				}
+        }
       </div>
     </>
   );
