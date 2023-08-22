@@ -17,50 +17,50 @@ const LoginSchema = z.object({
 
 type LoginForm = z.infer<typeof LoginSchema>
 export const useFormLoader = routeLoader$<InitialValues<LoginForm>>(() => ({
-	email: '',
+  email: '',
 }));
 
 
 export default component$(() => {
-	useStylesScoped$(CSS)
-	const message = useSignal('');
-	const loc = useLocation();
-	
+  useStylesScoped$(CSS)
+  const message = useSignal('');
+  const loc = useLocation();
+  
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [LoginForm, {Form, Field}] = useForm({
-		loader: useFormLoader(),
-		validate: zodForm$(LoginSchema)
-	})
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [LoginForm, {Form, Field}] = useForm({
+    loader: useFormLoader(),
+    validate: zodForm$(LoginSchema)
+  })
 
-	const handleSubmit = $<SubmitHandler<LoginForm>>(async (values) => {
-		try {
-			const {error} = await supabase.auth.signInWithOtp({
-				email: values.email,
-				options: {
-					emailRedirectTo: loc.url + 'staging'
-				}
-			})
-			if(error) {
-				throw new Error(error.message)
-			} else {
-				message.value = `Success`
-		}
-	}
-		catch(error: any) {
-			if(error && typeof error.message === 'string'){
-				message.value = error.message
-			}}
-	})
+  const handleSubmit = $<SubmitHandler<LoginForm>>(async (values) => {
+    try {
+      const {error} = await supabase.auth.signInWithOtp({
+        email: values.email,
+        options: {
+          emailRedirectTo: loc.url + 'staging'
+        }
+      })
+      if(error) {
+        throw new Error(error.message)
+      } else {
+        message.value = `Success`
+    }
+  }
+    catch(error: any) {
+      if(error && typeof error.message === 'string'){
+        message.value = error.message
+      }}
+  })
 
-	return (
-		<>
-		<NavBar />
-		<div class="page">
-			<h3 class="loginTitle">Login</h3>
-		<Form onSubmit$={handleSubmit} class="form">
-			<label for="email">email</label>
-		<Field name="email">
+  return (
+    <>
+    <NavBar />
+    <div class="page">
+      <h3 class="loginTitle">Login</h3>
+    <Form onSubmit$={handleSubmit} class="form">
+      <label for="email">email</label>
+    <Field name="email">
     {(field, props) => (
     <div>
       <input {...props} type="email"  id="email" class="loginInput" placeholder="gandalf@gmail.com" value={field.value} />
@@ -69,9 +69,9 @@ export default component$(() => {
   )}
   </Field>
   <button type="submit" class="loginButton">Login</button>
-	<p class="message">{message.value}</p>
-	</Form>
-	</div>
-	</>
-	)
+  <p class="message">{message.value}</p>
+  </Form>
+  </div>
+  </>
+  )
 }) 

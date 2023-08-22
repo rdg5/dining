@@ -13,39 +13,39 @@ export const userSessionContext = createContextId<any>('user-session')
 
 
 export type UserSession = {
-	userId: string,
-	isLoggedIn: boolean,
+  userId: string,
+  isLoggedIn: boolean,
 }
 
 export default component$(() => {
-	const userSession: UserSession = useStore({
-		userId: '',
-		isLoggedIn: false,
-	})
+  const userSession: UserSession = useStore({
+    userId: '',
+    isLoggedIn: false,
+  })
 
-	useVisibleTask$(async () => {
-		const { data: authListener} = supabase.auth.onAuthStateChange( async (event: string, session: any) => {
-			if(event === `SIGNED_IN`) {
-				//TODO send cookies to server
+  useVisibleTask$(async () => {
+    const { data: authListener} = supabase.auth.onAuthStateChange( async (event: string, session: any) => {
+      if(event === `SIGNED_IN`) {
+        //TODO send cookies to server
 
-				//auth
-				userSession.userId = session?.user?.id;
-				userSession.isLoggedIn = true;
-			}
-			if(event === `SIGNED_OUT`) {
-				//TODO sign out logic for server
+        //auth
+        userSession.userId = session?.user?.id;
+        userSession.isLoggedIn = true;
+      }
+      if(event === `SIGNED_OUT`) {
+        //TODO sign out logic for server
 
-				userSession.userId = '';
-				userSession.isLoggedIn = false;
-			}
+        userSession.userId = '';
+        userSession.isLoggedIn = false;
+      }
 
-			return(() => {
-				authListener?.subscription?.unsubscribe();
-			})
-		})
-	})
+      return(() => {
+        authListener?.subscription?.unsubscribe();
+      })
+    })
+  })
 
-	useContextProvider(userSessionContext, userSession)
+  useContextProvider(userSessionContext, userSession)
   return (
     <QwikCityProvider>
       <head>
