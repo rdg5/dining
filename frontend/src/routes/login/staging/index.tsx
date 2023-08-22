@@ -1,12 +1,16 @@
 import {
-  component$, useSignal, useVisibleTask$,
+  component$, useSignal, useVisibleTask$, useContext,
 } from "@builder.io/qwik";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 import { supabase } from "~/utils/supabase";
+import { UserSession, userSessionContext } from "~/root";
+import NavBar from "~/components/nav-bar/nav-bar";
 
 export default component$(() => {
 	const isProtectedOk = useSignal(false);
 	const navigate = useNavigate();
+	const userSession: UserSession = useContext(userSessionContext);
+
 
 	useVisibleTask$(() => {
 		const timeout = setTimeout(async () => {
@@ -14,9 +18,13 @@ export default component$(() => {
 
 			if(data?.user?.id && !error) {
 				isProtectedOk.value = true;
-				await navigate('/members/dashboard');
+				userSession.userId = data?.user?.id;
+				userSession.isLoggedIn = true;
+				// await navigate('/members/dashboard');
 			} else {
 				console.error(error);
+				userSession.userId = '';
+				userSession.isLoggedIn = false;
 				await navigate('/login')
 			}
 		},500)
@@ -28,6 +36,7 @@ export default component$(() => {
 
   return (
     <>
+		<NavBar />
       <div>
 				{isProtectedOk &&(
           <>

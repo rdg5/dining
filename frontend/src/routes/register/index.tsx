@@ -1,7 +1,7 @@
 import { $, component$, useStylesScoped$, useSignal } from "@builder.io/qwik";
 import { routeLoader$, useNavigate, z } from "@builder.io/qwik-city";
 import type { InitialValues, SubmitHandler} from "@modular-forms/qwik";
-import { email, useForm, zodForm$ } from "@modular-forms/qwik";
+import { useForm, zodForm$ } from "@modular-forms/qwik";
 import { supabase } from "~/utils/supabase";
 import  CSS  from './index.css?inline'
 // import apiFetch from "~/helper-functions/fetch";
@@ -18,9 +18,7 @@ const RegisterSchema = z.object({
  
 type RegisterForm = z.infer<typeof RegisterSchema>;
 export const useFormLoader = routeLoader$<InitialValues<RegisterForm>>(() => ({
-	username: '',
   email: '',
-  password: '',
 }));
 
 export default component$ (() => {
@@ -49,9 +47,7 @@ export default component$ (() => {
 			errorMessage.value = error.message;	
 	}
 	}
-
   });
-
 
 	return(
 		<>

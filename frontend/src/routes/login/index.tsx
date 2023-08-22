@@ -6,7 +6,6 @@ import NavBar from "~/components/nav-bar/nav-bar";
 import { supabase } from "~/utils/supabase";
 // import apiFetch from "~/helper-functions/fetch";
 import CSS from './index.css?inline'
-import { error } from "console";
 
 
 const LoginSchema = z.object({
@@ -36,7 +35,7 @@ export default component$(() => {
 
 	const handleSubmit = $<SubmitHandler<LoginForm>>(async (values) => {
 		try {
-			const {data, error} = await supabase.auth.signInWithOtp({
+			const {error} = await supabase.auth.signInWithOtp({
 				email: values.email,
 				options: {
 					emailRedirectTo: loc.url + 'staging'
@@ -48,10 +47,8 @@ export default component$(() => {
 				message.value = `Success`
 		}
 	}
-		
 		catch(error: any) {
 			if(error && typeof error.message === 'string'){
-				console.log
 				message.value = error.message
 			}}
 	})

@@ -1,9 +1,28 @@
-import { component$, useSignal } from "@builder.io/qwik";
-
+import { component$, useSignal, useVisibleTask$, useContext, $ } from "@builder.io/qwik";
+import { useNavigate } from "@builder.io/qwik-city";
+import type { UserSession} from "~/root";
+import { userSessionContext } from "~/root";
+import { supabase } from "~/utils/supabase";
 
 
 export default component$(() => {
 	const isLoggedIn = useSignal(false);
+	const userSession: UserSession = useContext(userSessionContext);
+	const nav = useNavigate();
+
+	useVisibleTask$(({ track }) => {
+    track(userSession);
+		if(userSession.isLoggedIn) {
+			isLoggedIn.value = true;
+		} else {
+			isLoggedIn.value = false;
+		}
+	})
+
+  const handleLogout = $(async () => {
+    await supabase.auth.signOut();
+		await nav('/')
+	})
 
 	return(
 		<>
@@ -21,7 +40,7 @@ export default component$(() => {
 			<a href="/profile">
 				<strong>Profile</strong>
 			</a>
-			<a href="/logout">
+			<a onClick$={handleLogout}>
 				<strong>Logout</strong>
 			</a>
 		</nav>
