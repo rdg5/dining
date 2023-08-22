@@ -39,6 +39,7 @@
     "vite-tsconfig-paths": "4.2.0"
   },
   "dependencies": {
-    "@modular-forms/qwik": "^0.20.0"
+    "@modular-forms/qwik": "^0.20.0",
+    "@supabase/supabase-js": "^2.33.0"
   }
 }

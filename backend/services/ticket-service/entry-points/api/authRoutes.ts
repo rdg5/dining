@@ -33,20 +33,11 @@ export default function defineUserRoutes(expressApp: express.Application) {
         res.status(404).end();
         return;
       }
-      res.cookie('accessToken', response.jwtToken, {
-        httpOnly: true,
-        path: '/',
-        maxAge: 1000 * 60 * 20,
-      });
 
-      res.cookie('refreshToken', response.refreshToken, {
-        httpOnly: true,
-        path: '/',
-        maxAge: 1000 * 60 * 60 * 24 * 30,
+      res.status(200).json({
+        status: 'ok',
+        data: response,
       });
-      // eslint-disable-next-line no-console
-      console.log(res);
-      res.status(200).json({ status: 'ok' });
     } catch (error) {
       if (error instanceof AppError) {
         res.status(error.HTTPStatus).json({ error: error.message });
@@ -68,18 +59,6 @@ export default function defineUserRoutes(expressApp: express.Application) {
         res.status(404).end();
         return;
       }
-
-      res.cookie('accessToken', response.newAccessToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1000 * 60 * 20,
-      });
-
-      res.cookie('refreshToken', response.refreshToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24 * 30,
-      });
       res.status(200).json({ status: 'ok' });
     } catch (error) {
       if (error instanceof AppError) {

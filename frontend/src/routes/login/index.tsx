@@ -1,10 +1,12 @@
 import { component$, $, useSignal, useStylesScoped$} from "@builder.io/qwik";
-import { routeLoader$, z } from "@builder.io/qwik-city";
+import { routeLoader$, useLocation, z } from "@builder.io/qwik-city";
 import type { InitialValues, SubmitHandler} from "@modular-forms/qwik";
 import { useForm, zodForm$ } from "@modular-forms/qwik";
 import NavBar from "~/components/nav-bar/nav-bar";
-import apiFetch from "~/helper-functions/fetch";
+import { supabase } from "~/utils/supabase";
+// import apiFetch from "~/helper-functions/fetch";
 import CSS from './index.css?inline'
+import { error } from "console";
 
 
 const LoginSchema = z.object({
@@ -12,36 +14,45 @@ const LoginSchema = z.object({
     .string()
     .min(1, 'Please enter your email.')
     .email('The email address is badly formatted.'),
-  password: z
-    .string()
-    .min(1, 'Please enter your password.')
-    .min(8, 'You password must have 8 characters or more.'),
 });
 
 type LoginForm = z.infer<typeof LoginSchema>
 export const useFormLoader = routeLoader$<InitialValues<LoginForm>>(() => ({
 	email: '',
-	password: '',
 }));
 
 
 export default component$(() => {
 	useStylesScoped$(CSS)
-	const errorMessage = useSignal('');
+	const message = useSignal('');
+	const loc = useLocation();
 	
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [LoginForm, {Form, Field}] = useForm({
 		loader: useFormLoader(),
 		validate: zodForm$(LoginSchema)
 	})
 
-	const handleSubmit = $<SubmitHandler<LoginForm>>(async (values, event) => {
+	const handleSubmit = $<SubmitHandler<LoginForm>>(async (values) => {
 		try {
-		await apiFetch('/auth/login', {method: 'Post', credentials:'include', body: JSON.stringify(values)})
+			const {data, error} = await supabase.auth.signInWithOtp({
+				email: values.email,
+				options: {
+					emailRedirectTo: loc.url + 'staging'
+				}
+			})
+			if(error) {
+				throw new Error(error.message)
+			} else {
+				message.value = `Success`
 		}
+	}
+		
 		catch(error: any) {
 			if(error && typeof error.message === 'string'){
-				errorMessage.value = error.message
+				console.log
+				message.value = error.message
 			}}
 	})
 
@@ -60,17 +71,8 @@ export default component$(() => {
     </div>
   )}
   </Field>
-		<label for="password">password</label>
-  <Field name="password">
-	{(field, props) => (
-    <div>
-      <input {...props} type="password" id="password" class="loginInput" placeholder="********" value={field.value} />
-      {field.error && <div class="error">{field.error}</div>}
-    </div>
-  )}
-  </Field>
   <button type="submit" class="loginButton">Login</button>
-	<p class="message">{errorMessage.value}</p>
+	<p class="message">{message.value}</p>
 	</Form>
 	</div>
 	</>

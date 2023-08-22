@@ -33,6 +33,7 @@ async function startWebServer(): Promise<AddressInfo> {
   await getDbConnection();
 
   const expressApp = express();
+  expressApp.use(helmet());
   expressApp.use(
     cors({
       origin: 'http://localhost:5173',
@@ -42,11 +43,6 @@ async function startWebServer(): Promise<AddressInfo> {
   expressApp.use(express.json());
   expressApp.use(express.urlencoded({ extended: true }));
   expressApp.use(cookies());
-  expressApp.use((req, res, next) => {
-    console.log(req.headers);
-    console.log(req.cookies);
-    next();
-  });
   expressApp.use(
     jwtVerifierMiddleware({
       secret: configurationProvider.getValue('jwtTokenSecret'),
@@ -58,7 +54,7 @@ async function startWebServer(): Promise<AddressInfo> {
   defineTeamRoutes(expressApp);
   definePermissionRoutes(expressApp);
   expressApp.use(addRequestIdExpressMiddleware);
-  expressApp.use(helmet());
+  // expressApp.use(helmet());
   defineErrorHandlingMiddleware(expressApp);
   const APIAddress = await openConnection(expressApp);
   return APIAddress;

@@ -19,6 +19,7 @@ export default async function apiFetch(endpoint: string, options: FetchOptions =
 			credentials: 'include'
 			
 	});
+
 	const data = await response.json();
 
 	if (!response.ok) {

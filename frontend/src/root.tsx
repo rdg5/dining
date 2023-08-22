@@ -1,4 +1,4 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useVisibleTask$ } from "@builder.io/qwik";
 import {
   QwikCityProvider,
   RouterOutlet,
@@ -7,6 +7,7 @@ import {
 import { RouterHead } from "./components/router-head/router-head";
 
 import "./global.css";
+import { supabase } from "./utils/supabase";
 
 export default component$(() => {
   /**
@@ -15,7 +16,20 @@ export default component$(() => {
    *
    * Don't remove the `<head>` and `<body>` elements.
    */
+	useVisibleTask$(async () => {
+		const { data: authListener} = supabase.auth.onAuthStateChange( async (event, session) => {
+			if(event === `SIGNED_IN`) {
+				//sign in logic
+			}
+			if(event === `SIGNED_OUT`) {
+				//sign out logic
+			}
 
+			return(() => {
+				authListener?.subscription?.unsubscribe();
+			})
+		})
+	})
   return (
     <QwikCityProvider>
       <head>
