@@ -21,7 +21,7 @@ export default component$(() => {
 
   const handleLogout = $(async () => {
     await supabase.auth.signOut();
-    await nav('/')
+    await nav('/login')
   })
 
   return(
