@@ -26,7 +26,7 @@
 - [Getting Started](#getting_started)
 - [Usage](#usage)
 - [Deployment](#deployment)
-- [Todo] (#todo)
+- [Todo](#todo)
 
 ## 🧐 About <a name = "about"></a>
 The project is a personal take on a  Public Transportation Ticketing System, where users can sign up and login, buy tickets and monthly passes that can be validated and the ticket controllers can check the validity using the QR code provided by the application.
