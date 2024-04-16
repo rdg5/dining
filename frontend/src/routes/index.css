@@ -1,0 +1,90 @@
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: #333;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.landing-container {
+  text-align: center;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 50px;
+  background-color: #007bff;
+  color: white;
+}
+
+.navbar .logo {
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.navbar .nav-links a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.navbar .sign-in-button {
+  background-color: #006bdd;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.hero {
+  background-image: url("https://source.unsplash.com/featured/?modern,city,transport");
+  background-size: cover;
+  color: white;
+  padding: 60px 20px;
+}
+
+.hero h1 {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.cta-button {
+  background-color: #ffc107;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.features {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding: 20px;
+}
+
+.feature-item {
+  margin: 0 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.feature-item h2 {
+  color: #007bff;
+}
+
+.feature-item p {
+  color: #666;
+  font-size: 16px;
+}
