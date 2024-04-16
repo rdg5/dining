@@ -28,7 +28,7 @@ export default component$(() => {
     <>
   {	isLoggedIn.value ?
     <nav>
-      <a href="/">
+      <a href="/members/shop">
         <strong>Shop</strong>
       </a>
       <a>

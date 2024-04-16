@@ -54,7 +54,7 @@ async function startWebServer(): Promise<AddressInfo> {
   defineTeamRoutes(expressApp);
   definePermissionRoutes(expressApp);
   expressApp.use(addRequestIdExpressMiddleware);
-  // expressApp.use(helmet());
+  expressApp.use(helmet());
   defineErrorHandlingMiddleware(expressApp);
   const APIAddress = await openConnection(expressApp);
   return APIAddress;
